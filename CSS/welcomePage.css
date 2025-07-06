@@ -268,3 +268,197 @@ main {
     font-size: 16px;
   }
 }
+
+/* login page */
+.login-container {
+  background: linear-gradient(90deg, #344831 7%, #3F5D3F 44%, #4D7A59 100%);
+  min-height: calc(100vh - 160px);
+  padding: 60px 40px;
+}
+
+.login-form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-form-row {
+  display: flex;
+  gap: 60px;
+}
+
+.login-form-column {
+  flex: 1;
+}
+
+.login-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #2D4A3D;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  text-align: left;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 16px;
+  text-align: left;
+}
+
+.form-input::placeholder {
+  color: #999;
+}
+
+.forgot-password {
+  display: block;
+  text-align: right;
+  color: red;
+  font-size: 14px;
+  margin-bottom: 30px;
+  text-decoration: none;
+}
+
+.login-button {
+  width: 100%;
+  background-color: #2D4A3D;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #3F5D3F;
+}
+
+.signup-link {
+  text-align: center;
+  color: #2D4A3D;
+  font-size: 14px;
+}
+
+.signup-link a {
+  color: #2D4A3D;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.login-image {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.image-placeholder {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .login-form-row {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .login-form-container {
+    padding: 30px;
+  }
+  
+  .login-image {
+    height: 200px;
+  }
+}
+
+/*Sign up page*/
+
+/* Additional form styles for signup page */
+.form-input[type="password"] {
+  letter-spacing: 1px;
+}
+
+.form-input[type="tel"] {
+  padding-left: 40px; /* Space for country code */
+}
+
+/* Password strength indicator */
+.password-strength {
+  margin-top: 5px;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-bar {
+  height: 100%;
+  width: 0%;
+  background: #e74c3c;
+  transition: width 0.3s, background 0.3s;
+}
+
+/* Terms checkbox */
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.terms-checkbox input {
+  margin-right: 10px;
+}
+
+.terms-checkbox label {
+  font-size: 14px;
+  color: #555;
+}
+
+.terms-checkbox a {
+  color: #2D4A3D;
+  text-decoration: none;
+}
+
+/* Responsive adjustments for signup form */
+@media (max-width: 768px) {
+  .login-form-row {
+    flex-direction: column-reverse; 
+  }
+  
+  .login-form-column:last-child {
+    margin-bottom: 30px;
+  }
+}
