@@ -1,19 +1,21 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Global variables
     let selectedAuthority = 'GACA';
     let selectedSimulator = null;
     let selectedSimulatorData = null;
     let uploadedFiles = [];
     let simulators = [];
 
-    // Initialize the page
     loadSimulators();
     setupEventListeners();
 
     function getElement(selector) {
         return document.querySelector(selector);
     }
-
     function getElements(selector) {
         return document.querySelectorAll(selector);
     }
@@ -21,9 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadSimulators() {
         try {
             const response = await fetch('../JSON/simulators.json');
-            if (!response.ok) {
-                throw new Error('Failed to load simulators');
-            }
+            if (!response.ok) throw new Error('Failed to load simulators');
             simulators = await response.json();
             populateSimulatorDropdown();
             initializeSelect2();
@@ -34,15 +34,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function populateSimulatorDropdown() {
-        const simulatorSelect = getElement('#simulator-select');
-        simulatorSelect.innerHTML = '<option value="">Select Simulator</option>';
-
-        simulators.forEach(simulator => {
+        const select = getElement('#simulator-select');
+        select.innerHTML = '<option value="">Select Simulator</option>';
+        simulators.forEach(sim => {
             const option = document.createElement('option');
-            option.value = simulator.name;
-            option.textContent = simulator.name;
-            option.dataset.image = `../Media/simulators/${simulator.image}`;
-            simulatorSelect.appendChild(option);
+            option.value = sim.name;
+            option.textContent = sim.name;
+            option.dataset.image = `../Media/simulators/${sim.image}`;
+            select.appendChild(option);
         });
     }
 
@@ -54,26 +53,17 @@ document.addEventListener('DOMContentLoaded', function () {
             width: '100%'
         });
 
-        // Update the original select change event to work with Select2
         $('#simulator-select').on('change', function () {
-            selectedSimulator = this.value;
-
+            selectedSimulator = $(this).val();
             if (selectedSimulator) {
-                // Find the selected simulator data
-                selectedSimulatorData = simulators.find(sim => sim.name === selectedSimulator);
-
-                // Update the simulator image
-                const simulatorImage = getElement('#simulator-image');
-                const selectedOption = this.options[this.selectedIndex];
-                if (selectedOption.dataset.image) {
-                    simulatorImage.src = selectedOption.dataset.image;
-                    simulatorImage.style.display = 'block';
+                selectedSimulatorData = simulators.find(s => s.name === selectedSimulator);
+                const img = getElement('#simulator-image');
+                if (selectedSimulatorData && selectedSimulatorData.image) {
+                    img.src = `../Media/simulators/${selectedSimulatorData.image}`;
+                    img.style.display = 'block';
                 }
-
-                // Update certificate details
                 updateCertificateDetails();
             } else {
-                // Clear the display if no simulator is selected
                 getElement('#simulator-image').style.display = 'none';
                 getElement('#evaluation-date').textContent = 'N/A';
                 getElement('#regulatory-id').textContent = 'N/A';
@@ -82,154 +72,111 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function formatSimulatorOption(simulator) {
-        if (!simulator.id) return simulator.text;
-
-        const simData = simulators.find(s => s.name === simulator.text);
-        if (!simData) return simulator.text;
-
-        const $container = $(
-            `<div class="simulator-option">
-                <img src="../Media/simulators/${simData.image}" class="simulator-option-image" />
-                <span>${simulator.text}</span>
-            </div>`
-        );
-        return $container;
+    function formatSimulatorOption(sim) {
+        if (!sim.id) return sim.text;
+        const simData = simulators.find(s => s.name === sim.text);
+        if (!simData) return sim.text;
+        return $(`
+      <div class="simulator-option">
+        <img src="../Media/simulators/${simData.image}" class="simulator-option-image" />
+        <span>${sim.text}</span>
+      </div>`);
     }
 
-    function formatSimulatorSelection(simulator) {
-        if (!simulator.id) return simulator.text;
-
-        const simData = simulators.find(s => s.name === simulator.text);
-        if (!simData) return simulator.text;
-
-        return $(`<span>${simulator.text}</span>`);
+    function formatSimulatorSelection(sim) {
+        return sim.id ? $(`<span>${sim.text}</span>`) : sim.text;
     }
 
     function setupEventListeners() {
-        // Authority buttons
-        getElements('.authority-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                getElements('.authority-btn').forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button
-                button.classList.add('active');
-
-                // Update selected authority
-                selectedAuthority = button.dataset.authority;
+        getElements('.authority-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                getElements('.authority-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedAuthority = btn.dataset.authority;
                 getElement('#authority-name').textContent = selectedAuthority;
                 getElement('#authority-badge').textContent = selectedAuthority;
-
-                // Toggle forms visibility
                 toggleRegulations();
-
-                // Update certificate details if a simulator is selected
-                if (selectedSimulatorData) {
-                    updateCertificateDetails();
-                }
+                if (selectedSimulatorData) updateCertificateDetails();
             });
         });
 
-        // File upload
-        getElement('#upload-area').addEventListener('click', () => getElement('#file-input').click());
+        const uploadArea = getElement('#upload-area');
+        uploadArea.addEventListener('click', () => getElement('#file-input').click());
 
-        getElement('#file-input').addEventListener('change', function (e) {
-            const files = Array.from(e.target.files);
-            uploadedFiles.push(...files);
+        getElement('#file-input').addEventListener('change', e => {
+            uploadedFiles.push(...Array.from(e.target.files));
             updateUploadedFilesDisplay();
         });
 
-        // Drag and drop for files
-        const uploadArea = getElement('#upload-area');
-        uploadArea.addEventListener('dragover', (e) => {
+        uploadArea.addEventListener('dragover', e => {
             e.preventDefault();
             uploadArea.style.borderColor = '#2D4A3D';
             uploadArea.style.backgroundColor = '#f9f9f9';
         });
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.borderColor = '#ccc';
-            uploadArea.style.backgroundColor = 'transparent';
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
+        uploadArea.addEventListener('dragleave', e => {
             e.preventDefault();
             uploadArea.style.borderColor = '#ccc';
             uploadArea.style.backgroundColor = 'transparent';
+        });
 
-            const files = Array.from(e.dataTransfer.files);
-            uploadedFiles.push(...files);
+        uploadArea.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ccc';
+            uploadArea.style.backgroundColor = 'transparent';
+            uploadedFiles.push(...Array.from(e.dataTransfer.files));
             updateUploadedFilesDisplay();
         });
 
-        // Send button
         getElement('#send-button').addEventListener('click', sendRequest);
     }
 
     function toggleRegulations() {
-        const gacaForms = getElement('#gaca-forms');
-        const easaForms = getElement('#easa-forms');
-
-        if (selectedAuthority === 'GACA') {
-            gacaForms.style.display = 'block';
-            easaForms.style.display = 'none';
-        } else {
-            gacaForms.style.display = 'none';
-            easaForms.style.display = 'block';
-        }
+        getElement('#gaca-forms').style.display = selectedAuthority === 'GACA' ? 'block' : 'none';
+        getElement('#easa-forms').style.display = selectedAuthority === 'EASA' ? 'block' : 'none';
     }
 
     function updateCertificateDetails() {
-        if (selectedSimulatorData) {
-            getElement('#evaluation-date').textContent = selectedAuthority === 'GACA'
-                ? selectedSimulatorData.GACA_EvaluationDate
-                : selectedSimulatorData.EASA_EvaluationDate;
-
-            getElement('#regulatory-id').textContent = selectedAuthority === 'GACA'
-                ? selectedSimulatorData['GACAregulatory ID#']
-                : selectedSimulatorData['EASAregulatory ID#'];
-        }
+        if (!selectedSimulatorData) return;
+        getElement('#evaluation-date').textContent = selectedAuthority === 'GACA' ? selectedSimulatorData.GACA_EvaluationDate : selectedSimulatorData.EASA_EvaluationDate;
+        getElement('#regulatory-id').textContent = selectedAuthority === 'GACA' ? selectedSimulatorData['GACAregulatory ID#'] : selectedSimulatorData['EASAregulatory ID#'];
     }
 
     function updateUploadedFilesDisplay() {
         const fileList = getElement('#file-list');
         const uploadedFilesContainer = getElement('#uploaded-files');
         const fileCount = getElement('#file-count');
-
         fileList.innerHTML = '';
 
-        if (uploadedFiles.length > 0) {
-            uploadedFilesContainer.classList.remove('hidden');
-
-            uploadedFiles.forEach((file, index) => {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-
-                fileItem.innerHTML = `
-                    <i class="fas fa-file-alt file-icon"></i>
-                    <div class="file-info">
-                        <div class="file-name">${file.name}</div>
-                        <div class="file-size">${formatFileSize(file.size)}</div>
-                    </div>
-                    <button class="file-remove" data-index="${index}">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-
-                fileList.appendChild(fileItem);
-            });
-
-            // Add event listeners to remove buttons
-            getElements('.file-remove').forEach(button => {
-                button.addEventListener('click', function () {
-                    const index = parseInt(this.dataset.index);
-                    uploadedFiles.splice(index, 1);
-                    updateUploadedFilesDisplay();
-                });
-            });
-        } else {
+        if (uploadedFiles.length === 0) {
             uploadedFilesContainer.classList.add('hidden');
+            fileCount.textContent = '0';
+            return;
         }
+
+        uploadedFilesContainer.classList.remove('hidden');
+        uploadedFiles.forEach((file, i) => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+        <i class="fas fa-file-alt file-icon"></i>
+        <div class="file-info">
+          <div class="file-name">${file.name}</div>
+          <div class="file-size">${formatFileSize(file.size)}</div>
+        </div>
+        <button class="file-remove" data-index="${i}">
+          <i class="fas fa-times"></i>
+        </button>`;
+            fileList.appendChild(div);
+        });
+
+        getElements('.file-remove').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const idx = parseInt(this.dataset.index);
+                uploadedFiles.splice(idx, 1);
+                updateUploadedFilesDisplay();
+            });
+        });
 
         fileCount.textContent = uploadedFiles.length;
     }
@@ -240,27 +187,54 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     }
 
-    function sendRequest() {
-        if (!selectedSimulator) {
+    async function sendRequest() {
+        if (!selectedSimulator || !selectedSimulatorData) {
             showNotification('Please select a simulator', 'error');
             return;
         }
 
-        const requestData = {
-            authority: selectedAuthority,
-            simulator: selectedSimulator,
-            message: getElement('#message-input').value,
-            files: uploadedFiles.map(file => ({
-                name: file.name,
-                size: file.size,
-                type: file.type
-            })),
-            timestamp: new Date().toISOString(),
-        };
+        const message = getElement('#message-input').value.trim();
+        if (message.length === 0) {
+            showNotification('Please enter a message', 'error');
+            return;
+        }
 
-        console.log('Request Data:', requestData);
-        showNotification('Request sent successfully!', 'success');
-        clearForm();
+        const evaluation = selectedAuthority === 'GACA' ? selectedSimulatorData.GACA_EvaluationDate : selectedSimulatorData.EASA_EvaluationDate;
+        const regulatoryID = selectedAuthority === 'GACA' ? selectedSimulatorData['GACAregulatory ID#'] : selectedSimulatorData['EASAregulatory ID#'];
+
+        try {
+            // Upload files to Firebase Storage and collect URLs
+            const uploadedFileInfos = [];
+            for (const file of uploadedFiles) {
+                const storageRef = ref(storage, `engRequests/${regulatoryID}/${Date.now()}_${file.name}`);
+                const snapshot = await uploadBytes(storageRef, file);
+                const url = await getDownloadURL(snapshot.ref);
+                uploadedFileInfos.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    url,
+                });
+            }
+
+            // Save the request with file URLs in Firestore
+            await addDoc(collection(db, 'EngRequests'), {
+                authority: selectedAuthority,
+                simulator: selectedSimulator,
+                evaluation,
+                regulatoryID,
+                message,
+                uploadedFiles: uploadedFileInfos,
+                timestamp: new Date()
+            });
+
+            showNotification('Request sent successfully!', 'success');
+            clearForm();
+
+        } catch (err) {
+            console.error(err);
+            showNotification('Failed to send request. Please try again.', 'error');
+        }
     }
 
     function clearForm() {
@@ -278,9 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const notification = getElement('#notification');
         notification.textContent = message;
         notification.className = `notification ${type} show`;
-
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
+        setTimeout(() => notification.classList.remove('show'), 3000);
     }
 });
