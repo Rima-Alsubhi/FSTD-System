@@ -1,6 +1,8 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
+// Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyBhqaYsVfpFmBQd7Nabai74qoNLLQyzGgg",
     authDomain: "fstd-tracking-system.firebaseapp.com",
@@ -11,7 +13,9 @@ const firebaseConfig = {
     measurementId: "G-4RR5RKHEZE"
 };
 
+// Initialize
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-export { app };
+export { db, storage };
