@@ -37,6 +37,11 @@ body {
   gap: 10px;
 }
 
+.line{
+  border-right: 1px solid #ccc;
+}
+
+
 .logo {
   width: 70px;
   height: 70px;
@@ -177,7 +182,8 @@ main {
 }
 
 .footer-col {
-  flex: 1 1 220px;
+  flex: 1 1 100px;
+ 
 }
 
 .footer-logo .logo.small {
@@ -219,6 +225,10 @@ main {
   color: var(--green-dark);
   margin: 0 0 12px;
   font-size: 16px;
+}
+
+.footer-col about {
+padding: 0% 19%;
 }
 
 .about p,
