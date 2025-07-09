@@ -2,6 +2,16 @@ import { db, storage } from '../JS/firebaseConfig.js';
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("[data-link]").forEach((el) =>
+      el.addEventListener("click", () => {
+        const target = el.getAttribute("data-link");
+        if (target && target !== "#") {
+          window.location.href = target;
+        }
+      })
+    );
+  });
 
 document.addEventListener('DOMContentLoaded', function () {
     let selectedAuthority = 'GACA';

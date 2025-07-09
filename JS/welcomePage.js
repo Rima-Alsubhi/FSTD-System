@@ -3,7 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-link]").forEach((el) =>
     el.addEventListener("click", () => {
       const target = el.getAttribute("data-link");
-      if (target && target !== "#") window.location.href = target;
+      
+      if (target && target !== "#") {
+        window.location.href = target;
+      }
     })
   );
 });
