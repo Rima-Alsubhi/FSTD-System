@@ -88,6 +88,8 @@ body {
 
 .sidebar {
   width: 300px;
+  height: 100;
+  justify-content: center;
   background: var(--container-bg);
   border-radius: 20px;
   padding: 30px;
@@ -112,6 +114,8 @@ body {
   border-radius: 20px;
   box-shadow: var(--shadow-medium);
   transition: transform 0.3s ease;
+  margin-bottom: 50px;
+  margin-top: 20px;
 }
 
 .sidebar-top:hover {
@@ -121,7 +125,7 @@ body {
 .sidebar-top img {
   width: 80px;
   height: 80px;
-  margin-bottom: 16px;
+  margin-top: 25px;
   filter: brightness(1.1);
 }
 
@@ -136,8 +140,9 @@ body {
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 40px;
   flex-grow: 1;
+  margin: auto 0;
 }
 
 .menu-item {
@@ -165,7 +170,7 @@ body {
 
 .menu-item.active {
   font-weight: 700;
-  background-color: var(--white);
+  background-color: var(--sidebar-bg);
   border-color: var(--green-accent);
   color: var(--green-dark);
 }
