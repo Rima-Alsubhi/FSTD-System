@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const loginButton = document.querySelector(".login-button");
+    const loginForm = document.getElementById("loginForm");
     const msgDiv = document.createElement("div");
     msgDiv.id = "msgDiv";
     msgDiv.style.marginTop = "10px";
     msgDiv.style.textAlign = "center";
-    loginButton.parentNode.insertBefore(msgDiv, loginButton.nextSibling);
+    loginForm.appendChild(msgDiv);
 
-    loginButton.addEventListener("click", (e) => {
+    loginForm.addEventListener("submit", function(e) {
         e.preventDefault();
         let messages = [];
 
@@ -26,7 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
             msgDiv.style.backgroundColor = "transparent";
             msgDiv.style.border = "none";
             
-            setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
+            // Submit the form programmatically if valid
+            setTimeout(() => { 
+                loginForm.submit(); 
+                // Or redirect if not using form submission
+                // window.location.href = "dashboard.html"; 
+            }, 1500);
         }
     });
 

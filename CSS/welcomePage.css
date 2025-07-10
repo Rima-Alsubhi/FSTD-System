@@ -473,3 +473,24 @@ padding: 0% 19%;
     margin-bottom: 30px;
   }
 }
+   /* Additional styles to fix image alignment */
+    .login-form-row {
+      display: flex;
+      align-items: center; /* This vertically centers the columns */
+      min-height: 100%; /* Ensure it takes full height */
+    }
+    .login-form-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Center content vertically within column */
+    }
+    .login-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    .login-image img {
+      max-height: 100%;
+      object-fit: contain;
+    }

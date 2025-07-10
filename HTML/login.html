@@ -8,9 +8,7 @@
   <link rel="stylesheet" href="../CSS/welcomePage.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="../Media/logo.png">
-    <script src="../JS/login.js"></script>
-
-
+  <script src="../JS/login.js"></script>
 </head>
 
 <body>
@@ -34,27 +32,26 @@
       <div class="login-form-row">
         <div class="login-form-column">
           <h1 class="login-title">Login</h1>
+          
+          <form id="loginForm" class="login-form" action="/login" method="POST">
+            <div class="form-group">
+              <label for="username" class="form-label">Email:</label>
+              <input type="text" id="username" name="username" class="form-input" placeholder="Enter your Email" required>
+            </div>
 
-          <div class="form-group">
-            <label for="username" class="form-label">Email:</label>
-            <input type="text" id="username" class="form-input" placeholder="Enter your Email">
-          </div>
+            <div class="form-group">
+              <label for="password" class="form-label">Password:</label>
+              <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
+            </div>
 
-          <div class="form-group">
-            <label for="password" class="form-label">Password:</label>
-            <input type="password" id="password" class="form-input" placeholder="Enter your password">
-          </div>
+            <a href="#" class="forgot-password">Forgot Password?</a>
 
-          <a href="#" class="forgot-password">Forgot Password?</a>
+            <button type="submit" class="login-button">Login</button>
 
-          <button type="submit" class="login-button">Login</button>
-
-          <div class="signup-link">
-            
-            
-            
-            Don't Have an Account? <a href="signup.html">Sign Up Now</a>
-          </div>
+            <div class="signup-link">
+              Don't Have an Account? <a href="signup.html">Sign Up Now</a>
+            </div>
+          </form>
         </div>
 
         <div class="login-form-column">

@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
+    const signupForm = document.getElementById("signupForm");
     const signupButton = document.querySelector(".login-button");
     const msgDiv = document.createElement("div");
     msgDiv.id = "msgDiv";
     msgDiv.style.marginTop = "10px";
     msgDiv.style.textAlign = "center";
-    signupButton.parentNode.insertBefore(msgDiv, signupButton.nextSibling);
+    signupForm.appendChild(msgDiv);
 
     // Disable button initially
     signupButton.disabled = true;
@@ -17,7 +18,23 @@ document.addEventListener("DOMContentLoaded", function() {
     // Add input event listeners to all fields
     inputs.forEach(input => {
         input.addEventListener("input", validateForm);
-        input.addEventListener("blur", validateField); // Validate when leaving field
+        input.addEventListener("blur", validateField);
+    });
+
+    signupForm.addEventListener("submit", function(e) {
+        if (!validateForm()) {
+            e.preventDefault();
+            return;
+        }
+        
+        msgDiv.innerHTML = "Account created successfully! Redirecting...";
+        msgDiv.style.color = "#2e7d32";
+        setTimeout(() => {
+            // Submit the form programmatically if valid
+            signupForm.submit();
+            // Or redirect if not using form submission
+            // window.location.href = "verification.html";
+        }, 1500);
     });
 
     function validateForm() {
@@ -33,14 +50,12 @@ document.addEventListener("DOMContentLoaded", function() {
         messages = validateMobile("mobile", messages);
         messages = validatePassword("password", messages);
 
-        // If any errors, show them
         if (messages.length > 0) {
             msgDiv.innerHTML = messages.join("<br>");
             msgDiv.style.color = "#d32f2f";
             isValid = false;
         }
 
-        // Enable/disable button based on validation
         signupButton.disabled = !isValid;
         signupButton.style.opacity = isValid ? "1" : "0.7";
         signupButton.style.cursor = isValid ? "pointer" : "not-allowed";
@@ -62,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function() {
             messages = validatePassword("password", messages);
         }
         
-        // Show specific field error if exists
         if (messages.length > 0) {
             const fieldMsg = document.createElement("div");
             fieldMsg.textContent = messages[0].replace("• ", "");
@@ -70,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function() {
             fieldMsg.style.fontSize = "0.8rem";
             fieldMsg.style.marginTop = "5px";
             
-            // Remove existing error message if any
             const existingError = field.parentNode.querySelector(".field-error");
             if (existingError) {
                 field.parentNode.removeChild(existingError);
@@ -79,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function() {
             fieldMsg.classList.add("field-error");
             field.parentNode.appendChild(fieldMsg);
         } else {
-            // Remove error message if field is valid
             const existingError = field.parentNode.querySelector(".field-error");
             if (existingError) {
                 field.parentNode.removeChild(existingError);
@@ -87,19 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    signupButton.addEventListener("click", function(e) {
-        if (!validateForm()) {
-            e.preventDefault();
-            return;
-        }
-        
-        msgDiv.innerHTML = "Account created successfully! Redirecting...";
-        msgDiv.style.color = "#2e7d32";
-        setTimeout(() => {
-            window.location.href = "verification.html";
-        }, 1500);
-    });
-
+    // Rest of the validation functions remain the same as your original
     function validateID(id, messages) {
         const element = document.getElementById(id);
         const value = element.value.trim();
