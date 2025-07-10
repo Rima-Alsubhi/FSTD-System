@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-link]").forEach((el) =>
     el.addEventListener("click", () => {
       const target = el.getAttribute("data-link");
-      
+
       if (target && target !== "#") {
         window.location.href = target;
       }
@@ -49,4 +49,9 @@ function symbol(key) {
     build: "🔧",
   };
   return map[key] || "❔";
+}
+
+function navigation(role) {
+  localStorage.setItem("selectedRole", role);
+  window.location.href = "../HTML/login.html"
 }

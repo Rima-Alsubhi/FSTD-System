@@ -20,9 +20,9 @@
     </div>
 
     <nav class="nav-buttons">
-    <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
-     <button data-link="#" class="text-btn active">HOME</button>
-     <button data-link="login.html" class="filled-btn">LOGIN</button>
+      <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
+      <button data-link="#" class="text-btn active">HOME</button>
+      <button data-link="login.html" class="filled-btn">LOGIN</button>
     </nav>
 
   </header>
@@ -32,18 +32,18 @@
     <h1 class="page-title">LOG IN AS</h1>
 
     <section class="card-wrap">
-     <article class="card" data-link="EngineerHomePage.html">
-     <div class="card-img">
-    <img src="../Media/engineer.jpeg" alt="Engineer" onerror="this.replaceWith(placeholder('engineer'));" />
-     </div>
-     <div class="card-body">
-    <div class="card-text">
-      <span class="card-title">TSV DEPARTMENT</span>
-      <span class="card-subtitle">Engineer</span>
-    </div>
-    <span class="card-arrow">➔</span>
-  </div>
-   </article>
+      <article class="card">
+        <div class="card-img">
+          <img src="../Media/engineer.jpeg" alt="Engineer" onerror="this.replaceWith(placeholder('engineer'));" />
+        </div>
+        <div class="card-body">
+          <div class="card-text">
+            <span class="card-title">TSV DEPARTMENT</span>
+            <span class="card-subtitle">Engineer</span>
+          </div>
+          <span class="card-arrow" onclick="navigation('Engineer')">➔</span>
+        </div>
+      </article>
 
       <article class="card" data-link="#">
         <div class="card-img">
@@ -54,7 +54,7 @@
             <span class="card-title">FINANCE DEPARTMENT</span>
             <span class="card-subtitle">Financial&nbsp;Analyst</span>
           </div>
-          <span class="card-arrow">➔</span>
+          <span class="card-arrow" onclick="navigation('Finance')">➔</span>
         </div>
       </article>
 
@@ -67,7 +67,7 @@
             <span class="card-title">TSV DEPARTMENT</span>
             <span class="card-subtitle">Manager&nbsp;Representative</span>
           </div>
-          <span class="card-arrow">➔</span>
+          <span class="card-arrow" onclick="navigation('Manager')">➔</span>
         </div>
       </article>
     </section>

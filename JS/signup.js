@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const signupForm = document.getElementById("signupForm");
     const signupButton = document.querySelector(".login-button");
     const msgDiv = document.createElement("div");
@@ -14,36 +14,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Get all input fields
     const inputs = document.querySelectorAll(".form-input");
-    
+
     // Add input event listeners to all fields
     inputs.forEach(input => {
         input.addEventListener("input", validateForm);
         input.addEventListener("blur", validateField);
     });
 
-    signupForm.addEventListener("submit", function(e) {
+    signupForm.addEventListener("submit", function (e) {
         if (!validateForm()) {
             e.preventDefault();
             return;
         }
-        
+
         msgDiv.innerHTML = "Account created successfully! Redirecting...";
         msgDiv.style.color = "#2e7d32";
         setTimeout(() => {
             // Submit the form programmatically if valid
             signupForm.submit();
             // Or redirect if not using form submission
-            // window.location.href = "verification.html";
+            window.location.href = "../HTML/verification.html";
         }, 1500);
     });
 
     function validateForm() {
         let isValid = true;
         let messages = [];
-        
+
         // Clear previous messages
         msgDiv.innerHTML = "";
-        
+
         // Validate each field
         messages = validateID("id-number", messages);
         messages = validateEmail("email", messages);
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function validateField(e) {
         const field = e.target;
         let messages = [];
-        
+
         if (field.id === "id-number") {
             messages = validateID("id-number", messages);
         } else if (field.id === "email") {
@@ -76,19 +76,19 @@ document.addEventListener("DOMContentLoaded", function() {
         } else if (field.id === "password") {
             messages = validatePassword("password", messages);
         }
-        
+
         if (messages.length > 0) {
             const fieldMsg = document.createElement("div");
             fieldMsg.textContent = messages[0].replace("• ", "");
             fieldMsg.style.color = "#d32f2f";
             fieldMsg.style.fontSize = "0.8rem";
             fieldMsg.style.marginTop = "5px";
-            
+
             const existingError = field.parentNode.querySelector(".field-error");
             if (existingError) {
                 field.parentNode.removeChild(existingError);
             }
-            
+
             fieldMsg.classList.add("field-error");
             field.parentNode.appendChild(fieldMsg);
         } else {
@@ -103,13 +103,13 @@ document.addEventListener("DOMContentLoaded", function() {
     function validateID(id, messages) {
         const element = document.getElementById(id);
         const value = element.value.trim();
-        
+
         if (!value) {
             messages.push("• Please enter your ID number (10 digits required)");
             highlightError(element);
             return messages;
         }
-        
+
         if (!/^\d+$/.test(value)) {
             messages.push("• ID must contain only numbers (no letters or symbols)");
             highlightError(element);
@@ -126,13 +126,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const element = document.getElementById(id);
         const value = element.value.trim();
         const pattern = /^[a-zA-Z0-9._%+-]+@saudia\.com$/i;
-        
+
         if (!value) {
             messages.push("• Please enter your email address");
             highlightError(element);
             return messages;
         }
-        
+
         if (!/@/.test(value)) {
             messages.push("• Email must contain '@' symbol (e.g., user@saudia.com)");
             highlightError(element);
@@ -148,13 +148,13 @@ document.addEventListener("DOMContentLoaded", function() {
     function validateMobile(id, messages) {
         const element = document.getElementById(id);
         const value = element.value.trim();
-        
+
         if (!value) {
             messages.push("• Please enter your mobile number");
             highlightError(element);
             return messages;
         }
-        
+
         if (!/^\d+$/.test(value)) {
             messages.push("• Mobile number can only contain numbers (no spaces or dashes)");
             highlightError(element);
@@ -173,37 +173,37 @@ document.addEventListener("DOMContentLoaded", function() {
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
         const hasNumber = /\d/.test(value);
         const hasUpper = /[A-Z]/.test(value);
-        
+
         if (!value) {
             messages.push("• Please create a password");
             highlightError(element);
             return messages;
         }
-        
+
         if (value.length < 8) {
             messages.push(`• Password too short (${value.length}/8 characters)`);
             highlightError(element);
         }
-        
+
         if (!hasSpecialChar) {
             messages.push("• Add a special character (!@#$%^&*)");
             highlightError(element);
         }
-        
+
         if (!hasNumber) {
             messages.push("• Include at least one number");
             highlightError(element);
         }
-        
+
         if (!hasUpper) {
             messages.push("• Include at least one uppercase letter");
             highlightError(element);
         }
-        
+
         if (value.length >= 8 && hasSpecialChar && hasNumber && hasUpper) {
             removeHighlight(element);
         }
-        
+
         return messages;
     }
 
@@ -220,4 +220,5 @@ document.addEventListener("DOMContentLoaded", function() {
             element.style.backgroundColor = "";
         }
     }
+
 });
