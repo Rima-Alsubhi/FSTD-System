@@ -494,3 +494,14 @@ padding: 0% 19%;
       max-height: 100%;
       object-fit: contain;
     }
+        .forgot-password {
+      color: red;
+      text-decoration: none;
+      display: block;
+      text-align: right;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+    .forgot-password:hover {
+      text-decoration: underline;
+    }

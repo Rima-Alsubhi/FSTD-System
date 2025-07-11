@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../CSS/welcomePage.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="../Media/logo.png">
-  <script src="../JS/signup.js"></script>
 </head>
 
 <body>
@@ -35,6 +34,11 @@
 
           <form id="signupForm" class="signup-form" action="/signup" method="POST">
             <div class="form-group">
+              <label for="fullName" class="form-label">Full Name:</label>
+              <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter your Full Name"
+                required>
+            </div>
+            <div class="form-group">
               <label for="id-number" class="form-label">ID Number:</label>
               <input type="text" id="id-number" name="id-number" class="form-input" placeholder="Enter your ID number"
                 required>
@@ -56,8 +60,12 @@
               <input type="password" id="password" name="password" class="form-input" placeholder="Create your password"
                 required>
             </div>
+            <div id="status" style="display:none;"></div>
 
             <button type="submit" class="login-button">Create Account</button>
+            <div class="signup-link">
+              Already Have an Account? <a href="login.html">Login Now</a>
+            </div>
           </form>
         </div>
 
@@ -114,8 +122,9 @@
       Copyright © Prince Sultan Aviation Academy
     </div>
   </footer>
-
   <script src="../JS/welcomePage.js"></script>
+  <script type="module" src="../JS/signup.js"></script>
+
 </body>
 
 </html>
