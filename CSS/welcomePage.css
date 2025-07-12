@@ -79,6 +79,7 @@ body {
   border-radius: 25px;
 }
 
+
 /* Main */
 main {
   padding: 80px 40px;
@@ -468,3 +469,35 @@ main {
     margin-bottom: 30px;
   }
 }
+   /* Additional styles to fix image alignment */
+    .login-form-row {
+      display: flex;
+      align-items: center; /* This vertically centers the columns */
+      min-height: 100%; /* Ensure it takes full height */
+    }
+    .login-form-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Center content vertically within column */
+    }
+    .login-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    .login-image img {
+      max-height: 100%;
+      object-fit: contain;
+    }
+        .forgot-password {
+      color: red;
+      text-decoration: none;
+      display: block;
+      text-align: right;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+    .forgot-password:hover {
+      text-decoration: underline;
+    }

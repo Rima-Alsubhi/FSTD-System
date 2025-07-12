@@ -4,9 +4,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="stylesheet" href="../CSS/welcomePage.css" />
+    <title>Check Bills</title>
+    <link rel="stylesheet" href="../CSS/welcomePage.css">
+    <link rel="stylesheet" href="../CSS/checkBills.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" type="image/png" href="../Media/logo.png">
+    <script src="../JS/login.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -19,48 +25,19 @@
 
         <nav class="nav-buttons">
             <button data-link="user_profile.html" class="text-btn">PROFILE</button>
-            <button data-link="welcomePage.html" class="text-btn">HOME</button>
-            <button data-link="signup.html" class="filled-btn">SIGNUP</button>
+            <button data-link="#" class="text-btn">HOME</button>
+            <button data-link="login.html" class="filled-btn">LOGIN</button>
         </nav>
     </header>
 
     <!-- ===== Main Content ===== -->
-    <main class="login-container">
-        <form id="loginForm" class="login-form-container">
-            <div class="login-form-row">
-                <div class="login-form-column">
-                    <h1 class="login-title">Login</h1>
-
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="text" id="email" class="form-input" placeholder="Enter your Email">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password:</label>
-                        <input type="password" id="password" class="form-input" placeholder="Enter your password">
-                        <a href="forget-password.html?role=manager" class="forgot-password">Forgot Password?</a>
-
-                    </div>
-
-                    <div id="status" style="display:none;"></div>
-
-                    <button type="submit" class="login-button">Login</button>
-                    <div class="signup-link">
-                        Don't Have an Account? <a href="signup.html">Sign Up Now</a>
-                    </div>
-                </div>
-
-                <div class="login-form-column">
-                    <div class="login-image">
-                        <img src="../Media/simulator.png" alt="Simulator">
-                        <div class="image-placeholder" style="display:none;">
-                            <i class="fas fa-plane" style="font-size: 80px; color: #777;"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+    <main class="backContainer">
+        <div class="billsContainer">
+            <h1 class="text">Bills</h1>
+            <hr class="divider">
+            <h2 class="text">Details</h2>
+            <h4 class="text">Status</h4>
+        </div>
     </main>
 
     <!-- ===== Footer ===== -->
@@ -106,7 +83,6 @@
     </footer>
 
     <script src="../JS/welcomePage.js"></script>
-    <script type="module" src="../JS/login.js"></script>
 </body>
 
 </html>
