@@ -1,33 +1,531 @@
 body {
     background-color: white;
     font-family: 'Signika', sans-serif;
-
+    margin: 0;
+    padding: 0;
 }
 
-.backContainer {
-    background: linear-gradient(90deg, #344831 7%, #3F5D3F 44%, #4D7A59 100%);
-    padding: 60px 40px;
-    width: 15%;
+/* الحاوية الأساسية */
+.container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* الصندوق الأخضر – واضح وثابت على اليسار */
+.green-box {
+    width: 300px;
     height: 40rem;
     border-radius: 13px;
+    background: linear-gradient(90deg, #344831 7%, #3F5D3F 44%, #4D7A59 100%);
+    z-index: 0;
+    flex-shrink: 0;
 }
 
-.billsContainer {
+/* الصندوق الأبيض – يخرج من وسط الأخضر */
+.white-box {
+    position: relative;
+    left: -150px;
+    /* نصف عرض الأخضر */
     background-color: white;
     width: 88rem;
+    max-width: calc(100% - 150px);
     height: 30rem;
     border-radius: 15px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 50px;
     display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 200px;
-    padding-left: 50px;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1;
+}
 
+/* النص */
+.divider {
+    border: none;
+    border-top: 2px solid #ccc;
+}
+
+h4 {
+    align-self: flex-end;
+    margin-top: auto;
 }
 
 
-h4 {
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.header-item h1,
+.header-item h2,
+.header-item h4 {
+    margin: 0;
+    color: #344831;
+    white-space: nowrap;
+}
+
+.divider {
+    margin-top: 20px;
+    border: none;
+    border-top: 2px solid #ccc;
+}
+
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        height: auto;
+    }
+
+    .green-box {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 0;
+    }
+
+    .white-box {
+        position: absolute;
+        top: 100px;
+        /* تقريباً منتصف الأخضر */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        height: auto;
+        margin: 0;
+        padding: 30px;
+        z-index: 1;
+        border-radius: 15px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    h4 {
+        align-self: flex-start;
+    }
+}
+
+/* Container and boxes - كما لديك */
+
+/* Bills Container */
+.bills-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 25rem;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-top: 20px;
+}
+
+/* Scrollbar */
+.bills-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.bills-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.bills-container::-webkit-scrollbar-thumb {
+    background: #4D7A59;
+    border-radius: 10px;
+}
+
+.bills-container::-webkit-scrollbar-thumb:hover {
+    background: #344831;
+}
+
+/* Each Bill item */
+.bill-item {
+    display: flex;
+    align-items: center;
+    background: #F9F9F4;
+    border-radius: 15px;
+    padding: 20px 25px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    gap: 30px;
+}
+
+/* Bill ID + Authority */
+.bill-id-section {
+    flex: 0 0 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bill-id {
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: #344831;
+}
+
+.authority-badge {
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    width: fit-content;
+}
+
+.authority-badge.gaca {
+    background-color: #344831;
+}
+
+.authority-badge.easa {
+    background-color: #4D7A59;
+}
+
+/* Details Section */
+.details-section {
+    flex: 1;
+    display: flex;
+    gap: 40px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 6px;
+    white-space: nowrap;
+}
+
+.detail-value {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #344831;
+}
+
+/* Status Section */
+.status-section {
+    flex: 0 0 110px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.status-btn {
+    background-color: #4D7A59;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: default;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+    text-transform: capitalize;
+}
+
+/* Status colors */
+.status-paid {
+    background-color: #344831;
+}
+
+.status-onprocess {
+    background-color: #6A8A61;
+}
+
+.status-pending {
+    background-color: #A4B394;
+}
+
+/* Responsive tweaks */
+@media (max-width: 992px) {
+    .bill-item {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .details-section {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .status-section {
+        justify-content: flex-start;
+    }
+}
+
+body {
+    background-color: white;
+    font-family: 'Signika', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* الحاوية الأساسية */
+.container {
     position: relative;
-    margin-left: 700px;
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* الصندوق الأخضر – واضح وثابت على اليسار */
+.green-box {
+    width: 300px;
+    height: 40rem;
+    border-radius: 13px;
+    background: linear-gradient(90deg, #344831 7%, #3F5D3F 44%, #4D7A59 100%);
+    z-index: 0;
+    flex-shrink: 0;
+}
+
+/* الصندوق الأبيض – يخرج من وسط الأخضر */
+.white-box {
+    position: relative;
+    left: -150px;
+    /* نصف عرض الأخضر */
+    background-color: white;
+    width: 88rem;
+    max-width: calc(100% - 150px);
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1;
+}
+
+/* النص */
+.divider {
+    border: none;
+    border-top: 2px solid #ccc;
+}
+
+h4 {
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.header-item h1,
+.header-item h2,
+.header-item h4 {
+    margin: 0;
+    color: #344831;
+    white-space: nowrap;
+}
+
+/* Bills Container */
+.bills-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 25rem;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-top: 20px;
+}
+
+/* Scrollbar */
+.bills-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.bills-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.bills-container::-webkit-scrollbar-thumb {
+    background: #4D7A59;
+    border-radius: 10px;
+}
+
+.bills-container::-webkit-scrollbar-thumb:hover {
+    background: #344831;
+}
+
+/* Each Bill item */
+.bill-item {
+    display: flex;
+    align-items: center;
+    background: #F9F9F4;
+    border-radius: 15px;
+    padding: 20px 25px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    gap: 30px;
+}
+
+/* Bill ID + Authority */
+.bill-id-section {
+    flex: 0 0 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bill-id {
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: #344831;
+}
+
+.authority-badge {
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    width: fit-content;
+}
+
+.authority-badge.gaca {
+    background-color: #344831;
+}
+
+.authority-badge.easa {
+    background-color: #4D7A59;
+}
+
+/* Details Section */
+.details-section {
+    flex: 1;
+    display: flex;
+    gap: 40px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 6px;
+    white-space: nowrap;
+}
+
+.detail-value {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #344831;
+}
+
+/* Status Section */
+.status-section {
+    flex: 0 0 110px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Dropdown (select) for status */
+.status-select {
+    background-color: #4D7A59;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+    text-transform: capitalize;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Different colors for statuses */
+.status-select.status-paid {
+    background-color: #344831;
+}
+
+.status-select.status-onprocess {
+    background-color: #6A8A61;
+}
+
+.status-select.status-pending {
+    background-color: #A4B394;
+}
+
+/* Responsive tweaks */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        height: auto;
+    }
+
+    .green-box {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 0;
+    }
+
+    .white-box {
+        position: absolute;
+        top: 100px;
+        /* تقريباً منتصف الأخضر */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        height: auto;
+        margin: 0;
+        padding: 30px;
+        z-index: 1;
+        border-radius: 15px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    h4 {
+        align-self: flex-start;
+    }
+
+    .bill-item {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .details-section {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .status-section {
+        justify-content: flex-start;
+    }
 }

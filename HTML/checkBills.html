@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../CSS/checkBills.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="icon" type="image/png" href="../Media/logo.png">
-    <script src="../JS/login.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
 
 
@@ -24,21 +23,35 @@
         </div>
 
         <nav class="nav-buttons">
-            <button data-link="user_profile.html" class="text-btn">PROFILE</button>
+            <button data-link="userProfile.html" class="text-btn">PROFILE</button>
             <button data-link="#" class="text-btn">HOME</button>
             <button data-link="login.html" class="filled-btn">LOGIN</button>
         </nav>
     </header>
 
     <!-- ===== Main Content ===== -->
-    <main class="backContainer">
-        <div class="billsContainer">
-            <h1 class="text">Bills</h1>
-            <hr class="divider">
-            <h2 class="text">Details</h2>
-            <h4 class="text">Status</h4>
+    <main class="container">
+        <div class="green-box"></div>
+        <div class="white-box">
+            <div class="header-row">
+                <div class="header-item">
+                    <h1>Bills</h1>
+                </div>
+                <div class="header-item">
+                    <h2>Details</h2>
+                </div>
+                <div class="header-item">
+                    <h4>Status</h4>
+                </div>
+            </div>
+            <hr class="divider" />
         </div>
+
+        <hr class="divider" />
+        </div>
+
     </main>
+
 
     <!-- ===== Footer ===== -->
     <footer class="footer">
@@ -83,6 +96,7 @@
     </footer>
 
     <script src="../JS/welcomePage.js"></script>
+    <script type="module" src="../JS/checkBills.js"></script>
 </body>
 
 </html>
