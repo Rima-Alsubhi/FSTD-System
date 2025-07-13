@@ -43,7 +43,7 @@ async function loadBills() {
     // عرض رسالة تحميل مؤقتة
     billsContainer.innerHTML = `
         <div style="text-align: center; color: #666; padding: 40px;">
-            <div class="spinner" style="margin-bottom: 10px;">⏳ Loading bills...</div>
+            <div class="spinner" style="margin-bottom: 10px;">Loading bills...</div>
         </div>
     `;
 
@@ -66,7 +66,6 @@ async function loadBills() {
             const bill = docSnap.data();
             const docId = docSnap.id;
 
-            // رقم الحساب بناء على Authority
             let accountInfoHtml = '';
             if ((bill["Authority"] || "").toLowerCase() === "gaca") {
                 accountInfoHtml = `
@@ -90,19 +89,31 @@ async function loadBills() {
                 return `<option value="${status}" ${selected}>${status}</option>`;
             }).join('');
 
+            const outerDiv = document.createElement('div');
+            outerDiv.classList.add("outerDiv");
             const billItem = document.createElement('div');
             billItem.className = 'bill-item';
 
-            billItem.innerHTML = `
-                <div class="bill-id-section">
+            const billID = document.createElement('div');
+            billID.className = 'bill-id';
+            billID.innerHTML = `
+                        <div class= "greenStyle">
+
+            <div class="bill-id-section">
+
                     <div class="bill-id">${bill["Bill ID"] || "—"}</div>
-                    <div class="authority-badge ${(bill["Authority"] || "").toLowerCase()}">${bill["Authority"] || "—"}</div>
-                </div>
+
+
+                    </div>
+            <div class="authority-badge ${(bill["Authority"] || "").toLowerCase()}">${bill["Authority"] || "—"}</div>
+                        </div>`;
+            billItem.innerHTML = `
+        
 
                 <div class="details-section">
                     <div class="detail-item">
                         <div class="detail-label">Billing Date</div>
-                        <div class="detail-value">${bill["Billing Date"] || "—"}</div>
+                        <div class="detail-value">${bill["Billing Date"].toDate().toDateString() || "—"}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Amount</div>
@@ -117,14 +128,27 @@ async function loadBills() {
                     </div>
                 </div>
 
-                <div class="status-section">
+                    <div class="detail-item">
+                        <div class="detail-label"></div>
+<div class="detail-value note-trigger fas fa-envelope" data-note="${(bill["Notes"] || "—").replace(/"/g, '&quot;')}"></div>
+                        </div>
+                        <div class="status-section">
                     <select class="status-select ${getStatusClass(currentStatus)}" data-doc-id="${docId}">
                         ${statusOptions}
                     </select>
                 </div>
             `;
 
-            billsContainer.appendChild(billItem);
+            outerDiv.appendChild(billID);
+            outerDiv.appendChild(billItem);
+            billsContainer.appendChild(outerDiv);
+
+        });
+        document.addEventListener("click", (e) => {
+            if (e.target.classList.contains("note-trigger")) {
+                const note = e.target.dataset.note || "—";
+                showMessage(note);
+            }
         });
 
     } catch (error) {
@@ -145,7 +169,6 @@ async function updateBillStatus(docId, newStatus) {
     const billRef = doc(db, "Bills", docId);
     try {
         await updateDoc(billRef, { Status: newStatus });
-        console.log(`Status updated for bill ${docId} to ${newStatus}`);
     } catch (err) {
         console.error("Failed to update status:", err);
         alert("Failed to update status. Please try again.");
@@ -167,3 +190,23 @@ window.addEventListener("change", (e) => {
 });
 
 window.addEventListener("DOMContentLoaded", loadBills);
+
+
+function showMessage(message) {
+    const messageContainer = document.createElement('div');
+    const paragraph = document.createElement('p');
+    paragraph.innerText = message;
+    paragraph.classList.add("header-item");
+    messageContainer.classList.add("messageContainer");
+    messageContainer.appendChild(paragraph);
+    const okButton = document.createElement("button");
+    okButton.classList.add("returnButton")
+    okButton.innerHTML = "Return";
+    messageContainer.appendChild(okButton);
+
+    document.body.appendChild(messageContainer);
+
+    okButton.onclick = () => {
+        messageContainer.remove();
+    };
+}
