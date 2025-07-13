@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        // Assuming you want to show the most recent one
         let latestForm = null;
         let latestTimestamp = null;
 
