@@ -1,4 +1,4 @@
-import { db, storage } from '../JS/firebaseConfig.js';
+import { db, storage, auth } from '../JS/firebaseConfig.js';
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
@@ -235,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 regulatoryID,
                 message,
                 uploadedFiles: uploadedFileInfos,
+                engineerId: auth.currentUser.uid, 
                 timestamp: new Date()
             });
 

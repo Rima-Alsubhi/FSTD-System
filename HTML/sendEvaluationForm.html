@@ -28,34 +28,30 @@
   <div class="login-form-container">
     <div class="login-form-row">
       <div class="login-form-column">
-        <h2 class="login-title">Send Evaluation & Session Dates</h2>
+        <h2 class="login-title">Send Evaluation & Session Time</h2>
         <form id="evaluationForm">
+          <!-- Engineer Email -->
           <div class="form-group">
             <label class="form-label" for="engineerEmail">Engineer Email</label>
             <input type="email" id="engineerEmail" class="form-input" placeholder="example@saudia.com" required>
           </div>
 
+          <!-- Evaluation Date with Calendar -->
           <div class="form-group">
             <label class="form-label" for="evaluationDate">Evaluation Date</label>
-            <select id="evaluationDate" class="form-input" required>
-              <option value="" disabled selected>Select one</option>
-              <option value="2025-07-20">2025-07-20</option>
-              <option value="2025-07-21">2025-07-21</option>
-              <option value="2025-07-22">2025-07-22</option>
-              <option value="2025-07-23">2025-07-23</option>
-              <option value="2025-07-24">2025-07-24</option>
-            </select>
+            <input type="date" id="evaluationDate" class="form-input" required>
           </div>
 
+          <!-- Session Time Options -->
           <div class="form-group">
-            <label class="form-label" for="sessionDate">Session Date</label>
-            <select id="sessionDate" class="form-input" required>
-              <option value="" disabled selected>Select one</option>
-              <option value="2025-07-25">2025-07-25</option>
-              <option value="2025-07-26">2025-07-26</option>
-              <option value="2025-07-27">2025-07-27</option>
-              <option value="2025-07-28">2025-07-28</option>
-              <option value="2025-07-29">2025-07-29</option>
+            <label class="form-label" for="sessionTime">Session Time</label>
+            <select id="sessionTime" class="form-input" required>
+              <option value="" disabled selected>Select a time slot</option>
+              <option value="A">A: 3:00 - 7:00 AM</option>
+              <option value="B">B: 7:00 - 11:00 AM</option>
+              <option value="C">C: 11:00 AM - 3:00 PM</option>
+              <option value="D">D: 3:00 - 7:00 PM</option>
+              <option value="E">E: 7:00 - 11:00 PM</option>
             </select>
           </div>
 
@@ -103,3 +99,6 @@
     Copyright © Prince Sultan Aviation Academy
   </div>
 </footer>
+
+</body>
+</html>
