@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RequsetDetalis</title>
+  <link rel="stylesheet" href="../CSS/RequestDetails.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="icon" type="image/png" href="../Media/logo.png">
+
+</head>
+
+<body>
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <div class="logo-group">
+      <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo" />
+      <img src="../Media/academy_text_logo.png" class="logo-text" alt="Academy logo" />
+    </div>
+
+    <nav class="nav-buttons">
+      <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
+      <button data-link="welcomePage.html" class="text-btn">HOME</button>
+      <button data-link="login.html" class="filled-btn">LOGIN</button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="request-container">
+      <div class="request-header">
+        <div class="request-info">
+          <h2>Requests from Faris</h2>
+          <div class="request-details">
+            <span class="request-id">#R001</span><br />
+            <span>B747 - 400</span>
+          </div>
+        </div>
+        <div class="device-image">
+          <img src="../Media/device_beige.png" alt="Flight Simulator Device" />
+        </div>
+        <div class="end-date">
+          <div class="end-date-label">Ends Date:</div>
+          <div class="end-date-value">10-NOV-2025</div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="message-section">
+          <h3>Message from Eng. Faris</h3>
+          <textarea id="messageInput" class="message-box" placeholder="Type your  message here... "></textarea>
+        </div>
+
+        <div class="file-section">
+          <h3>Uploaded Files</h3>
+
+          <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" />
+            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+            <div class="file-upload-text">Click to upload files</div>
+          </div>
+
+          <div id="fileList" class="uploaded-file-list"></div>
+        </div>
+      </div>
+      <button class="send-button" onclick="sendMessage()">Send to GACA</button>
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <!-- column 1 -->
+      <div class="footer-col">
+        <div class="logo-group footer-logo">
+          <img src="../Media/saudia_logo.png" class="logo small" alt="Saudia logo" />
+          <img src="../Media/academy_text_logo.png" class="logo-text small" alt="Academy logo" />
+        </div>
+        <div class="visit-us">
+          <span>VISIT&nbsp;US</span>
+          <a href="https://x.com/psaa_sbu?lang=ar" target="_blank" aria-label="Twitter"><i
+              class="fab fa-twitter"></i></a>
+          <a href="tel:+966126860114" aria-label="Phone"><i class="fas fa-phone-alt"></i></a>
+          <a href="mailto:Psaasales@saudia.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://www.linkedin.com/company/prince-sultan-aviation-academy/" target="_blank"
+            aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <!-- column 2 -->
+      <div class="footer-col about">
+        <h2>About Us</h2>
+        <p>
+          We provide a smart system to track and manage certificates for aviation simulation devices. Our goal is to
+          ensure efficient, accurate, and reliable handling of certificate issuance, renewal, and expiration.
+        </p>
+      </div>
+
+      <!-- column 3 -->
+      <div class="footer-col contact">
+        <h2>Contact Us</h2>
+        <p>Jeddah, KSA&nbsp;21231<br />Psaasales@Saudia.Com<br />+966&nbsp;12&nbsp;686&nbsp;0114</p>
+      </div>
+    </div>
+
+    <div class="copyright">
+      Copyright © Prince Sultan Aviation Academy
+    </div>
+  </footer>
+  <script src="../JS/RequsetDetails.js"></script>
+</body>
+
+</html>
