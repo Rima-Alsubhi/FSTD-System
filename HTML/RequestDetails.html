@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome Page</title>
-  <link rel="stylesheet" href="../CSS/welcomePage.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RequsetDetalis</title>
+  <link rel="stylesheet" href="../CSS/RequestDetails.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="../Media/logo.png">
+
 </head>
 
 <body>
@@ -20,55 +21,51 @@
 
     <nav class="nav-buttons">
       <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
-      <button data-link="#" class="text-btn active">HOME</button>
-      <button data-link="signup.html" class="filled-btn">SignUp</button>
+      <button data-link="welcomePage.html" class="text-btn">HOME</button>
+      <button data-link="login.html" class="filled-btn">LOGIN</button>
     </nav>
   </header>
 
-  <!-- ===== Main ===== -->
-  <main>
-    <h1 class="page-title">LOG IN AS</h1>
-
-    <section class="card-wrap">
-      <article class="card" data-link="../HTML/signup.html">
-        <div class="card-img">
-          <img src="../Media/engineer.jpeg" alt="Engineer" onerror="this.replaceWith(placeholder('engineer'));" />
-        </div>
-        <div class="card-body">
-          <div class="card-text">
-            <span class="card-title">TSV DEPARTMENT</span>
-            <span class="card-subtitle">Engineer</span>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="request-container">
+      <div class="request-header">
+        <div class="request-info">
+          <h2>Requests from Faris</h2>
+          <div class="request-details">
+            <span class="request-id">#R001</span><br />
+            <span>B747 - 400</span>
           </div>
-          <span class="card-arrow" onclick="navigation('Engineer')">➔</span>
         </div>
-      </article>
+        <div class="device-image">
+          <img src="../Media/device_beige.png" alt="Flight Simulator Device" />
+        </div>
+        <div class="end-date">
+          <div class="end-date-label">Ends Date:</div>
+          <div class="end-date-value">10-NOV-2025</div>
+        </div>
+      </div>
 
-      <article class="card" data-link="../HTML/signup.html">
-        <div class="card-img">
-          <img src="../Media/finance.webp" alt="Finance" onerror="this.replaceWith(placeholder('finance'));" />
+      <div class="content-section">
+        <div class="message-section">
+          <h3>Message from Eng. Faris</h3>
+          <textarea id="messageInput" class="message-box" placeholder="Type your  message here... "></textarea>
         </div>
-        <div class="card-body">
-          <div class="card-text">
-            <span class="card-title">FINANCE DEPARTMENT</span>
-            <span class="card-subtitle">Financial&nbsp;Analyst</span>
-          </div>
-          <span class="card-arrow" onclick="navigation('Finance')">➔</span>
-        </div>
-      </article>
 
-      <article class="card" data-link="../HTML/signup.html">
-        <div class="card-img">
-          <img src="../Media/manager.jpg" alt="Manager" onerror="this.replaceWith(placeholder('manager'));" />
-        </div>
-        <div class="card-body">
-          <div class="card-text">
-            <span class="card-title">TSV DEPARTMENT</span>
-            <span class="card-subtitle">Manager&nbsp;Representative</span>
+        <div class="file-section">
+          <h3>Uploaded Files</h3>
+
+          <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" />
+            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+            <div class="file-upload-text">Click to upload files</div>
           </div>
-          <span class="card-arrow" onclick="navigation('Manager')">➔</span>
+
+          <div id="fileList" class="uploaded-file-list"></div>
         </div>
-      </article>
-    </section>
+      </div>
+      <button class="send-button" onclick="sendMessage()">Send to GACA</button>
+    </div>
   </main>
 
   <!-- ===== Footer ===== -->
@@ -98,7 +95,7 @@
           We provide a smart system to track and manage certificates for aviation simulation devices. Our goal is to
           ensure efficient, accurate, and reliable handling of certificate issuance, renewal, and expiration.
         </p>
-      </div>  
+      </div>
 
       <!-- column 3 -->
       <div class="footer-col contact">
@@ -111,8 +108,7 @@
       Copyright © Prince Sultan Aviation Academy
     </div>
   </footer>
-
-  <script src="../JS/welcomePage.js"></script>
+  <script src="../JS/RequsetDetails.js"></script>
 </body>
 
 </html>
