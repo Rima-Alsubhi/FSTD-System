@@ -55,25 +55,28 @@ const fileInput = document.getElementById('fileInput');
   }
 
   // زر الإرسال
-  function sendMessage() {
-    const message = document.getElementById('messageInput').value.trim();
+function sendMessage() {
+  const message = document.getElementById('messageInput').value.trim();
 
-    if (!message) {
-      alert("Please type a message before sending.");
-      return;
-    }
-
-    if (uploadedFiles.length === 0) {
-      alert("Please upload at least one file.");
-      return;
-    }
-
-    // هنا تقدر تربطيه بسيرفر أو API
-    alert(`Message sent with ${uploadedFiles.length} file(s):\n\n${message}`);
-
-    // مسح الحقول بعد الإرسال
-    document.getElementById('messageInput').value = '';
-    fileInput.value = '';
-    uploadedFiles = [];
-    updateFileList();
+  if (!message) {
+    alert("Please type a message before sending.");
+    return;
   }
+
+  if (uploadedFiles.length === 0) {
+    alert("Please upload at least one file.");
+    return;
+  }
+
+  // إرسال الإيميل عبر mailto
+  const email = "1929@gaca.gov.sa";
+  const subject = encodeURIComponent("Simulator Certificate Submission");
+  const body = encodeURIComponent(`Dear GACA,\n\n${message}\n\nAttached files: ${uploadedFiles.length} file(s).`);
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+
+  // مسح الحقول بعد الإرسال
+  document.getElementById('messageInput').value = '';
+  fileInput.value = '';
+  uploadedFiles = [];
+  updateFileList();
+}
