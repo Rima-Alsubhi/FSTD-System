@@ -2,42 +2,20 @@
 import { db } from "../JS/firebaseConfig.js";
 import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-// دالة لتحديد كلاس الحالة (للـ CSS)
-function getStatusClass(status) {
-    switch (status.toLowerCase()) {
-        case 'paid':
-            return 'status-paid';
-        case 'on process':
-            return 'status-onprocess';
-        case 'pending':
-            return 'status-pending';
-        default:
-            return 'status-pending';
-    }
-}
 
 async function loadBills() {
     const whiteBox = document.querySelector(".white-box");
-
-
-    // إزالة الحاوية القديمة إذا موجودة
-    const existingContainer = whiteBox.querySelector(".bills-container");
-    if (existingContainer) {
-        existingContainer.remove();
-    }
 
     // إنشاء الحاوية الجديدة للفواتير
     const billsContainer = document.createElement("div");
     billsContainer.className = "bills-container";
     billsContainer.id = "billsContainer";
 
-    // إضافة الحاوية بعد الخط الفاصل
     const divider = whiteBox.querySelector(".divider");
     if (divider) {
         divider.after(billsContainer);
     }
 
-    // عرض رسالة تحميل مؤقتة
     billsContainer.innerHTML = `
         <div style="text-align: center; color: #666; padding: 40px;">
             <div class="spinner" style="margin-bottom: 10px;">Loading bills...</div>

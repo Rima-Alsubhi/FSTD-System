@@ -85,7 +85,7 @@ function sendMessage() {
   }
 
   // إرسال الإيميل عبر mailto
-  const email = "1929@gaca.gov.sa";
+  const email = "joudjalal5@gmailcom";
   const subject = encodeURIComponent("Simulator Certificate Submission");
   const body = encodeURIComponent(`Dear GACA,\n\n${message}\n\nAttached files: ${uploadedFiles.length} file(s).`);
   window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;

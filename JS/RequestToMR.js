@@ -2,16 +2,16 @@ import { db, storage, auth } from '../JS/firebaseConfig.js';
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
-  document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-link]").forEach((el) =>
-      el.addEventListener("click", () => {
-        const target = el.getAttribute("data-link");
-        if (target && target !== "#") {
-          window.location.href = target;
-        }
-      })
+        el.addEventListener("click", () => {
+            const target = el.getAttribute("data-link");
+            if (target && target !== "#") {
+                window.location.href = target;
+            }
+        })
     );
-  });
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     let selectedAuthority = 'GACA';
@@ -226,16 +226,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     url,
                 });
             }
-
+            let requestID = generateNextReqID()
             // Save the request with file URLs in Firestore
             await addDoc(collection(db, 'EngRequests'), {
+                reqID: requestID,
                 authority: selectedAuthority,
                 simulator: selectedSimulator,
                 evaluation,
                 regulatoryID,
                 message,
                 uploadedFiles: uploadedFileInfos,
-                engineerId: auth.currentUser.uid, 
+                engineerId: auth.currentUser.uid,
                 timestamp: new Date()
             });
 
@@ -246,6 +247,13 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error(err);
             showNotification('Failed to send request. Please try again.', 'error');
         }
+    }
+
+    async function generateNextReqID() {
+        const engRef = collection(db, 'EngRequests');
+        const snapshot = await getDocs(engRef);
+        const count = snapshot.size + 1;
+        return "#R" + count.toString().padStart(3, '0');
     }
 
     function clearForm() {
