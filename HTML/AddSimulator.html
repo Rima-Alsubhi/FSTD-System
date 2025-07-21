@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Simulator</title>
+  <link rel="stylesheet" href="../CSS/Simulator.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="icon" type="image/png" href="../Media/logo.png">
+
+</head>
+
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <div class="logo-group">
+      <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo" />
+      <img src="../Media/academy_text_logo.png" class="logo-text" alt="Academy logo" />
+    </div>
+
+    <nav class="nav-buttons">
+      <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
+      <button data-link="welcomePage.html" class="text-btn">HOME</button>
+      <button data-link="login.html" class="text-btn">LOGIN</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div class="form-container">
+      <div class="form-header">
+        <h2>Add Simulator</h2>
+      </div>
+
+      <form id="simulatorForm">
+        <div class="form-group">
+          <label for="simName">Simulator Name</label>
+          <input type="text" id="simName" name="simName">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="aircraftModel">Aircraft Model</label>
+            <input type="text" id="aircraftModel" name="aircraftModel">
+          </div>
+          <div class="form-group">
+            <label for="simId">Simulator ID</label>
+            <input type="text" id="simId" name="simId">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="SimNumber">Simulator Number</label>
+            <input type="text" id="SimNumber" name="SimNumber">
+          </div>
+          <div class="form-group">
+            <label for="gacaRegId">GACA Regulatory ID</label>
+            <input type="text" id="gacaRegId" name="gacaRegId">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="easaId">EASA Regulatory ID</label>
+            <input type="text" id="easaId" name="easaId">
+          </div>
+          <div class="form-group">
+            <label for="gacaInitialDate">GACA Initial Date</label>
+            <input type="date" id="gacaInitialDate" name="gacaInitialDate">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="easaInitialDate">EASA Initial Date</label>
+            <input type="date" id="easaInitialDate" name="easaInitialDate">
+          </div>
+          <div class="form-group">
+            <label for="gacaEvalDate">GACA Evaluation Date</label>
+            <input type="date" id="gacaEvalDate" name="gacaEvalDate">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="easaEvalDate">EASA Evaluation Date</label>
+          <input type="date" id="easaEvalDate" name="easaEvalDate">
+        </div>
+        <div class="upload-section">
+          <label for="uploadFiles">Upload Image</label>
+          <div class="upload-box" onclick="document.getElementById('uploadFiles').click()">
+            <i class="fas fa-upload"></i>
+            <div class="upload-text">
+              Drag and Drop Image or <span>Upload</span>
+            </div>
+            <input type="file" id="uploadFiles" name="uploadFiles" accept="image/*">
+          </div>
+        </div>
+
+      
+        <div id="imagePreview" style="margin-top: 15px; display: none;">
+          <img id="previewImg" src="" alt="Image Preview"
+            style="max-width: 100%; border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+          <button type="button" id="removeImage"
+            style="display: block; margin-top: 10px; background: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+            Remove Image
+          </button>
+        </div>
+
+        <button type="submit" class="add-button">ADD</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <!-- column 1 -->
+      <div class="footer-col">
+        <div class="logo-group footer-logo">
+          <img src="../Media/saudia_logo.png" class="logo small" alt="Saudia logo" />
+          <img src="../Media/academy_text_logo.png" class="logo-text small" alt="Academy logo" />
+        </div>
+        <div class="visit-us">
+          <span>VISIT&nbsp;US</span>
+          <a href="https://x.com/psaa_sbu?lang=ar" target="_blank" aria-label="Twitter"><i
+              class="fab fa-twitter"></i></a>
+          <a href="tel:+966126860114" aria-label="Phone"><i class="fas fa-phone-alt"></i></a>
+          <a href="mailto:Psaasales@saudia.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://www.linkedin.com/company/prince-sultan-aviation-academy/" target="_blank"
+            aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <!-- column 2 -->
+      <div class="footer-col about">
+        <h2>About Us</h2>
+        <p>
+          We provide a smart system to track and manage certificates for aviation simulation devices. Our goal is to
+          ensure efficient, accurate, and reliable handling of certificate issuance, renewal, and expiration.
+        </p>
+      </div>
+
+      <!-- column 3 -->
+      <div class="footer-col contact">
+        <h2>Contact Us</h2>
+        <p>Jeddah, KSA&nbsp;21231<br />Psaasales@Saudia.Com<br />+966&nbsp;12&nbsp;686&nbsp;0114</p>
+      </div>
+    </div>
+
+    <div class="copyright">
+      Copyright © Prince Sultan Aviation Academy
+    </div>
+  </footer>
+  <script type="module" src="../JS/AddSimulator.js"></script>
+</body>
+
+</html>
