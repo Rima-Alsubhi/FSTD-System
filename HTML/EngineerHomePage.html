@@ -10,7 +10,7 @@
   <link rel="icon" type="image/png" href="../Media/logo.png">
   <script type="module" src="../JS/EngineerHomePage.js"></script>
 
-  
+
 </head>
 
 <body>
@@ -29,30 +29,41 @@
   </header>
 
   <!-- ===== Dashboard Main ===== -->
-   <div id="notificationBanner" style="display: none; background-color: #ffefc4; color: #333; padding: 10px; text-align: center; font-weight: bold; border: 1px solid #f0c36d;">
-  <!-- Notification will be shown here -->
-</div>
+  <div id="notificationBanner"
+    style="display: none; background-color: #ffefc4; color: #333; padding: 10px; text-align: center; font-weight: bold; border: 1px solid #f0c36d;">
+    <!-- Notification will be shown here -->
+  </div>
   <div class="container">
     <aside class="sidebar">
-        <h2>Welcome Rema,</h2>
-        <div class="sidebar-top">
-          <img src="../Media/plane_icon.png" alt="" class="sidebar-icon" />
-          <p>Track, Manage, and Verify Device Certificates with Ease.</p>
+      <h2>Welcome Rema,</h2>
+      <div class="sidebar-top">
+        <img src="../Media/plane_icon.png" alt="" class="sidebar-icon" />
+        <p>Track, Manage, and Verify Device Certificates with Ease.</p>
+      </div>
+      <div class="menu">
+        <div class="menu-item active">
+          <img src="../Media/dashboard.png" class="icon"> Dashboard
         </div>
-        <div class="menu">
-          <div class="menu-item active">
-            <img src="../Media/dashboard.png" class="icon"> Dashboard
-          </div>
-          <div class="menu-item" onclick="location.href='RequestToMR.html'">
-            <img src="../Media/MR.png" class="icon"> Send Request to MR
-          </div>
-          <div class="menu-item">
-            <img src="../Media/certification.png" class="icon"> Check Certification Process
-          </div>
-          <div class="menu-item" onclick="location.href='viewEvaluationForm.html'">
-            <img src="../Media/certification.png" class="icon"> View Evaluations form
-          </div>
+        <div class="menu-item" onclick="location.href='RequestToMR.html'">
+          <img src="../Media/MR.png" class="icon"> Send Request to MR
         </div>
+        <div class="menu-item" onclick="location.href='RequestsList.html'">
+          <img src="../Media/certification.png" class="icon"> Check Certification Process
+        </div>
+        <div class="menu-item" onclick="location.href='AddSimulator.html'">
+          <img src="../Media/certification.png" class="icon"> Add New Simulator
+        </div>
+        <div class="menu-item" onclick="location.href='modifySimulator.html'">
+          <img src="../Media/certification.png" class="icon"> Modify Simulator Information
+        </div>
+        <div class="menu-item" onclick="location.href='deleteSimulator.html'">
+          <img src="../Media/certification.png" class="icon"> Delete a Simulator
+        </div>
+        <div class="menu-item" onclick="location.href='viewEvaluationForm.html'">
+          <img src="../Media/certification.png" class="icon"> View Evaluations form
+        </div>
+
+      </div>
     </aside>
 
     <main class="main-content">
@@ -160,4 +171,3 @@
 </body>
 
 </html>
-

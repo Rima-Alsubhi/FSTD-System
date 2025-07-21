@@ -53,7 +53,7 @@ function symbol(key) {
 
 function navigation(role) {
   localStorage.setItem("selectedRole", role);
-  window.location.href = "../HTML/signup.html"
+  window.location.href = "../HTML/login.html";
 }
 
 //y

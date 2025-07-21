@@ -12,40 +12,36 @@ import {
   getDoc
 } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
 
-const container   = document.querySelector('.requests-container');
+const container = document.querySelector('.requests-container');
 const pageTitleEl = document.getElementById('page-title');
 
 // خريطة تربط اسم المحاكي بصورة محلية من مجلد المشروع
 const simImageMap = {
   'A320-200 #1': 'A320-200-1.png',
   'A320-200 #2': 'A320-200-2.png',
-  'B747 - 400' : 'B747-400.png',
-  'B737 NG'    : 'B737-NG.png',
-  'A330-340'   : 'A330-340.png',
+  'B747 - 400': 'B747-400.png',
+  'B737 NG': 'B737-NG.png',
+  'A330-340': 'A330-340.png',
   // ✨ أضف المزيد هنا إذا عندك محاكيات أخرى
 };
 
-// دالة ترجع المسار الكامل لصورة المحاكي
-function getSimImage(simName) {
-  const fileName = simImageMap[simName] || 'default.png';
-  return `../Media/simulators/${fileName}`;
-}
+
 
 // إنشاء كرت عرض لكل طلب
-function createRequestCard(data) {
+function createRequestCard(data, imageUrl) {
   const {
-    authority     = 'Unknown',
-    evaluation    = 'N/A',
-    regulatoryID  = 'N/A',
-    simulator     = 'Unknown Simulator',
-    uploadedFiles = []
+    authority = 'Unknown',
+    evaluation = 'N/A',
+    regulatoryID = 'N/A',
+    simulator = 'Unknown Simulator',
+    uploadedFiles = [],
   } = data;
 
   const filesCount = Array.isArray(uploadedFiles)
     ? uploadedFiles.length
     : (uploadedFiles || 0);
 
-  const imgPath = getSimImage(simulator);
+
 
   return `
     <div class="request-card">
@@ -53,7 +49,7 @@ function createRequestCard(data) {
       <div class="request-model">${simulator}</div>
 
       <div class="simulator-image">
-        <img src="${imgPath}" alt="Simulator">
+        <img src="${imageUrl || 'default-sim-image.png'}" alt="Simulator">
       </div>
 
       <div class="request-details">
@@ -95,11 +91,25 @@ async function loadRequestsFor(role, uid) {
       container.innerHTML = '<p>No requests found.</p>';
       return;
     }
+    for (const docSnap of snap.docs) {
+      const requestData = docSnap.data();
+      let imageUrl = null;
 
-    snap.forEach(docSnap => {
-      const cardHTML = createRequestCard(docSnap.data());
+      if (requestData.simulator) {
+        try {
+          const simDoc = await getDoc(doc(db, 'Simulators', requestData.simulator));
+          if (simDoc.exists()) {
+            imageUrl = simDoc.data().imageUrl || null;
+          }
+        } catch (simErr) {
+          console.error(`Error fetching simulator data for ${requestData.simulator}`, simErr);
+        }
+      }
+
+      const cardHTML = createRequestCard(requestData, imageUrl);
       container.insertAdjacentHTML('beforeend', cardHTML);
-    });
+    }
+
   } catch (err) {
     console.error('Error loading requests:', err);
     container.innerHTML = '<p style="color:red">Failed to load requests.</p>';
