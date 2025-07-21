@@ -46,7 +46,7 @@ import { auth, db } from '../JS/firebaseConfig.js';
             ${regulatoryID}
           </div>
           <div class="request-model">
-            <i class="fas fa-plane" style="font-size: 12px; margin-bottom: 4px; opacity: 0.7;"></i>
+            <i class="fas fa-cogs" style="font-size: 12px; margin-bottom: 4px; opacity: 0.7;"></i>
             ${simulator}
           </div>
 
