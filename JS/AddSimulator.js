@@ -60,21 +60,20 @@ document.getElementById("simulatorForm").addEventListener("submit", async (e) =>
     return;
   }
 
-  // نحضر اسم السميوليتر ونحوله إلى اسم مناسب للداتا بيز
   const simNameRaw = document.getElementById("simName").value.trim();
   const simName = simNameRaw.replace(/[.$/\[\]]/g, "-");
 
   const simData = {
-    simName: simNameRaw,
+    simulatorName: simNameRaw,
     aircraftModel: document.getElementById("aircraftModel").value,
-    simId: document.getElementById("simId").value,
+    simulatorID: document.getElementById("simId").value,
     SimNumber: document.getElementById("SimNumber").value,
-    gacaRegId: document.getElementById("gacaRegId").value,
-    easaId: document.getElementById("easaId").value,
-    gacaInitialDate: document.getElementById("gacaInitialDate").value,
-    easaInitialDate: document.getElementById("easaInitialDate").value,
-    gacaEvalDate: document.getElementById("gacaEvalDate").value,
-    easaEvalDate: document.getElementById("easaEvalDate").value,
+    GACAregulatory: document.getElementById("gacaRegId").value,
+    EASAregulatory: document.getElementById("easaId").value,
+    GACA_InitialDate: document.getElementById("gacaInitialDate").value,
+    EASA_InitialDate: document.getElementById("easaInitialDate").value,
+    GACA_EvaluationDate: document.getElementById("gacaEvalDate").value,
+    EASA_EvaluationDate: document.getElementById("easaEvalDate").value,
     imageUrl: imageUrl,
     createdAt: new Date()
   };

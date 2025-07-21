@@ -17,9 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadSimulators() {
         try {
             const response = await getDocs(collection(db, 'Simulators'));
-            response.forEach(doc => {
-                allSimulators.push(doc.data());
-            })
+            response.forEach(d => {
+                allSimulators.push({ id: d.id, ...d.data() });
+            });
+
             populateSimulatorDropdown(allSimulators);
             initializeSelect2();
         } catch (error) {
@@ -29,16 +30,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function populateSimulatorDropdown(allSimulators) {
-        const select = getElement('#simulator-select');
+        const select = document.querySelector('#simulator-select');
         select.innerHTML = '<option value="">Select Simulator</option>';
         allSimulators.forEach(sim => {
             const option = document.createElement('option');
-            option.value = sim.name;
-            option.textContent = sim.name;
-            option.dataset.image = `${sim.image}`;
+            option.value = sim.id;
+            option.textContent = sim.simulatorName;
+            option.dataset.id = sim.simulatorID;
+            option.dataset.name = sim.simulatorName;
+            option.dataset.image = sim.imageUrl;
             select.appendChild(option);
         });
     }
+
 
     function initializeSelect2() {
         $('#simulator-select').select2({
@@ -51,26 +55,31 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#simulator-select').on('change', function () {
             selectedSimulator = $(this).val();
             if (selectedSimulator) {
-                selectedSimulatorData = allSimulators.find(s => s.name === selectedSimulator);
+                selectedSimulatorData = allSimulators.find(s => s.id === selectedSimulator);
                 const img = getElement('#simulator-image');
-                if (selectedSimulatorData && selectedSimulatorData.image) {
-                    img.src = `${selectedSimulatorData.image}`;
+                if (selectedSimulatorData && selectedSimulatorData.imageUrl) {
+                    img.src = `${selectedSimulatorData.imageUrl}`;
                     img.style.display = 'block';
                 }
             }
         });
     }
 
-    function formatSimulatorOption(sim) {
-        if (!sim.id) return sim.text;
-        const simData = allSimulators.find(s => s.name === sim.text);
-        if (!simData) return sim.text;
+    function formatSimulatorOption(state) {
+        if (!state.id) return state.text;
+
+        const optionEl = document.querySelector(`option[value="${state.id}"]`);
+        if (!optionEl) return state.text;
+
+        const imageUrl = optionEl.dataset.image;
         return $(`
-      <div class="simulator-option">
-        <img src="../Media/simulators/${simData.image}" class="simulator-option-image" />
-        <span>${sim.text}</span>
-      </div>`);
+        <div class="simulator-option d-flex align-items-center">
+            <img src="${imageUrl}" class="simulator-option-image me-2" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px;" />
+            <span>${state.text}</span>
+        </div>
+    `);
     }
+
 
     function formatSimulatorSelection(sim) {
         return sim.id ? $(`<span>${sim.text}</span>`) : sim.text;
@@ -85,19 +94,20 @@ deleteButton.addEventListener("click", async function () {
     if (!selectedSimulator) {
         showNotification('Please select a simulator first.', 'error');
         return;
-    }
-    try {
-        const docRef = doc(db, "Simulators", selectedSimulator);
-        await deleteDoc(docRef);
-        showNotification('Simulator Deleted Successfully!', 'success');
-    } catch (error) {
-        console.error('Error deleting simulator:', error);
-        showNotification('Failed to delete simulator', 'error');
+    } else {
+        try {
+            const docRef = doc(db, "Simulators", selectedSimulator);
+            await deleteDoc(docRef);
+            showNotification('Simulator Deleted Successfully!', 'success');
+        } catch (error) {
+            console.error('Error deleting simulator:', error);
+            showNotification('Failed to delete simulator', 'error');
+        }
     }
 });
 
 function showNotification(message, type) {
-    const notification = getElementById('notification');
+    const notification = document.getElementById('notification');
     notification.textContent = message;
     notification.className = `notification ${type} show`;
     setTimeout(() => notification.classList.remove('show'), 3000);

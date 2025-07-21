@@ -1,71 +1,74 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Bill (MR) - Saudia Academy</title>
-    <link rel="stylesheet" href="../CSS/addBill.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Bill (MR) - Saudia Academy</title>
+  <link rel="icon" type="image/png" href="../Media/logo.png">
+  <link rel="stylesheet" href="../CSS/addBill.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
- <!-- ===== Header ===== -->
-    <header class="app-header">
-        <div class="logo-group">
-            <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo" />
-            <img src="../Media/academy_text_logo.png" class="logo-text" alt="Academy logo" />
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <div class="logo-group">
+      <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo" />
+      <img src="../Media/academy_text_logo.png" class="logo-text" alt="Academy logo" />
+    </div>
+
+    <nav class="nav-buttons">
+      <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
+      <button data-link="welcomePage.html" class="text-btn">HOME</button>
+      <button data-link="login.html" class="filled-btn">LOGIN</button>
+    </nav>
+  </header>
+
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="bill-form-container">
+      <h2>Bill Payment</h2>
+
+      <form id="billForm" class="bill-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="billerName">Biller Name(Authority)</label>
+            <input type="text" id="billerName" name="billerName" required>
+          </div>
+          <div class="form-group">
+            <label for="accountNumber">Sadad Number / Account Number</label>
+            <input type="text" id="accountNumber" name="accountNumber" placeholder="" required>
+            <small class="helper-text">ex: 12345678</small>
+          </div>
         </div>
 
-        <nav class="nav-buttons">
-            <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
-            <button data-link="welcomePage.html" class="text-btn">HOME</button>
-            <button data-link="login.html" class="filled-btn">LOGIN</button>
-        </nav>
-    </header>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required>
+          </div>
+        </div>
 
+        <div class="form-group full-width">
+          <label for="notes">Notes</label>
+          <textarea id="notes" name="notes" rows="4" placeholder="Add any additional notes here..."></textarea>
+        </div>
 
-<!-- Main Content -->
-<main class="main-content">
-    <div class="bill-form-container">
-        <h2>Bill Payment</h2>
-        
-        <form id="billForm" class="bill-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="billerName">Biller Name(Authority)</label>
-                    <input type="text" id="billerName" name="billerName" required>
-                </div>
-                <div class="form-group">
-                    <label for="accountNumber">Sadad Number / Account Number</label>
-                    <input type="text" id="accountNumber" name="accountNumber" placeholder="" required>
-                    <small class="helper-text">ex: 12345678</small>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="amount">Amount</label>
-                    <input type="number" id="amount" name="amount" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="date">Date</label>
-                    <input type="date" id="date" name="date" required>
-                </div>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="notes">Notes</label>
-                <textarea id="notes" name="notes" rows="4" placeholder="Add any additional notes here..."></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="send-btn">SEND</button>
-            </div>
-        </form>
+        <div class="form-actions">
+          <button type="submit" class="send-btn">SEND</button>
+        </div>
+      </form>
     </div>
-</main>
+  </main>
 
-<!-- ===== Footer ===== -->
+  <!-- ===== Footer ===== -->
   <footer class="footer">
     <div class="footer-grid">
       <!-- column 1 -->
@@ -106,44 +109,45 @@
     </div>
   </footer>
 
-<!-- Success Modal -->
-<div id="successModal" class="modal">
+  <!-- Success Modal -->
+  <div id="successModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <div class="success-icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <h3>Success!</h3>
-        <p>Your bill has been submitted successfully.</p>
-        <button class="modal-btn" onclick="closeModal()">OK</button>
+      <span class="close">&times;</span>
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h3>Success!</h3>
+      <p>Your bill has been submitted successfully.</p>
+      <button class="modal-btn" onclick="closeModal()">OK</button>
     </div>
-</div>
+  </div>
 
-<!-- Error Modal -->
-<div id="errorModal" class="modal">
+  <!-- Error Modal -->
+  <div id="errorModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <div class="error-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <h3>Error!</h3>
-        <p id="errorMessage">Please fill in all required fields.</p>
-        <button class="modal-btn" onclick="closeModal()">OK</button>
+      <span class="close">&times;</span>
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3>Error!</h3>
+      <p id="errorMessage">Please fill in all required fields.</p>
+      <button class="modal-btn" onclick="closeModal()">OK</button>
     </div>
-</div>
-<script>
-  document.querySelectorAll('[data-link]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const url = btn.getAttribute('data-link');
-      if (url) window.location.href = url;
+  </div>
+  <script>
+    document.querySelectorAll('[data-link]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const url = btn.getAttribute('data-link');
+        if (url) window.location.href = url;
+      });
     });
-  });
-</script>
+  </script>
 
-<script type="module" src="../JS/firebaseConfig.js"></script>
-<script type="module" src="../JS/addBill.js"></script>
+  <script type="module" src="../JS/firebaseConfig.js"></script>
+  <script type="module" src="../JS/addBill.js"></script>
 
 
 
 </body>
+
 </html>

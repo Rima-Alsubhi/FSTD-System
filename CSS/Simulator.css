@@ -17,7 +17,7 @@
 
  body {
    font-family: Arial, sans-serif;
-   background: #2D4A3D;
+   background: linear-gradient(90deg, #344831 7%, #3F5D3F 44%, #4D7A59 100%);
    min-height: 100vh;
    display: flex;
    flex-direction: column;
@@ -98,7 +98,7 @@
  }
 
  .form-header {
-   background: #2D4A3D;
+   background: linear-gradient(90deg, #344831 7%, #3F5D3F 44%, #4D7A59 100%);
    color: white;
    text-align: center;
    padding: 15px 0;
@@ -199,85 +199,86 @@
    display: none;
  }
 
-/* Footer */
-.footer {
-  background: #fff;
-  padding: 30px 40px;
-}
+ /* Footer */
+ .footer {
+   background: #fff;
+   padding: 30px 40px;
+ }
 
-.footer-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-}
+ .footer-grid {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 30px;
+ }
 
-.footer-col {
-  flex: 1 1 100px;
- 
-}
+ .footer-col {
+   flex: 1 1 100px;
 
-.footer-logo .logo.small {
-  width: 90px;
-  height: 90px;
-}
+ }
 
-.footer-logo .logo-text.small {
-  height: 80px;
-}
+ .footer-logo .logo.small {
+   width: 90px;
+   height: 90px;
+ }
 
-.visit-us {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 40px;
-  background: #fdfdfd;
-  font-weight: 700;
-  font-size: 10px;
-  white-space: nowrap;
-  width: fit-content;
-}
+ .footer-logo .logo-text.small {
+   height: 80px;
+ }
 
-.visit-us i {
-  font-size: 18px;
-  color: var(--green-dark);
-  transition: color 0.2s ease;
-}
+ .visit-us {
+   display: inline-flex;
+   align-items: center;
+   gap: 12px;
+   margin-top: 20px;
+   padding: 10px 20px;
+   border: 1px solid #e0e0e0;
+   border-radius: 40px;
+   background: #fdfdfd;
+   font-weight: 700;
+   font-size: 10px;
+   white-space: nowrap;
+   width: fit-content;
+ }
 
-.visit-us i:hover {
-  color: var(--green-light);
-}
+ .visit-us i {
+   font-size: 18px;
+   color: var(--green-dark);
+   transition: color 0.2s ease;
+ }
 
-.about h2,
-.contact h2 {
-  color: var(--green-dark);
-  margin: 0 0 12px;
-  font-size: 16px;
-}
+ .visit-us i:hover {
+   color: var(--green-light);
+ }
 
-.footer-col about {
-padding: 0% 19%;
-}
+ .about h2,
+ .contact h2 {
+   color: var(--green-dark);
+   margin: 0 0 12px;
+   font-size: 16px;
+ }
 
-.about p,
-.contact p {
-  font-size: 13px;
-  line-height: 1.6;
-  margin: 0;
-}
+ .footer-col about {
+   padding: 0% 19%;
+ }
 
-.contact p {
-  white-space: pre-line;
-}
+ .about p,
+ .contact p {
+   font-size: 13px;
+   line-height: 1.6;
+   margin: 0;
+ }
 
-.copyright {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 12px;
-  color: #777;
-}
+ .contact p {
+   white-space: pre-line;
+ }
+
+ .copyright {
+   margin-top: 20px;
+   text-align: center;
+   font-size: 12px;
+   color: #777;
+ }
+
  /* Responsive */
  @media (max-width: 768px) {
    .main-content {
