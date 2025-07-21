@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-// Firebase config
+
 const firebaseConfig = {
   apiKey: "AIzaSyBhqaYsVfpFmBQd7Nabai74qoNLLQyzGgg",
   authDomain: "fstd-tracking-system.firebaseapp.com",
@@ -12,14 +12,13 @@ const firebaseConfig = {
   measurementId: "G-4RR5RKHEZE"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Hardcoded user ID
+
 const userId = "3CDQyOXFinZKz0RRLo6Z";
 
-// Keep track of editing state
+
 let isEditing = false;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -46,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const userRef = doc(db, "users ", userId); // ← شلت المسافة الزايدة
+        const userRef = doc(db, "users ", userId); 
         await updateDoc(userRef, updatedData);
         alert("✅ Profile updated successfully!");
         editBtn.textContent = "Edit";
@@ -62,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Load user data
 async function loadUserProfile() {
   try {
-    const docRef = doc(db, "users ", userId); // ← شلت المسافة الزايدة
+    const docRef = doc(db, "users ", userId); 
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -72,7 +71,7 @@ async function loadUserProfile() {
       document.getElementById("jobtitle").value = data.jobTitle || "";
       document.getElementById("dob").value = data.dob || "";
       document.getElementById("gender").value = data.gender || "";
-      toggleFormFields(true); // ← تعطيلها بالبداية
+      toggleFormFields(true); 
     } else {
       console.log("❌ No user data found.");
     }

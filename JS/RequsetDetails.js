@@ -1,63 +1,62 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+// import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// import Firebase modules
-import { db } from "../JS/firebaseConfig.js";
+// // import Firebase modules
+// import { db } from "../JS/firebaseConfig.js";
 
 
-let requestData = null; // 🟡 لحفظ البيانات مؤقتًا لاستخدامها لاحقًا
+// let requestData = null; 
 
-async function fetchRequestDetails() {
-  const docRef = doc(db, "EngRequests", "#R001");
-  const docSnap = await getDoc(docRef);
+// async function fetchRequestDetails() {
+//   const docRef = doc(db, "EngRequests", "#R001");
+//   const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    requestData = docSnap.data(); // 🔁 خزّناها هنا
+//   if (docSnap.exists()) {
+//     requestData = docSnap.data(); 
 
-    // عرض البيانات في الصفحة
-    document.querySelector(".request-id").textContent = requestData.reqID;
-    document.querySelector(".Simulator-type").textContent = requestData.simulator;
-    document.querySelector(".end-date-value").textContent = requestData.endDate;
-    document.getElementById("messageInput").value = requestData.message;
+//     document.querySelector(".request-id").textContent = requestData.reqID;
+//     document.querySelector(".Simulator-type").textContent = requestData.simulator;
+//     document.querySelector(".end-date-value").textContent = requestData.endDate;
+//     document.getElementById("messageInput").value = requestData.message;
 
-    const fileBox = document.getElementById("fileList");
-    fileBox.innerHTML = "";
+//     const fileBox = document.getElementById("fileList");
+//     fileBox.innerHTML = "";
 
-    if (requestData.uploadedFiles && requestData.uploadedFiles.length > 0) {
-      requestData.uploadedFiles.forEach(file => {
-        const item = document.createElement("div");
-        item.className = "file-item";
-        item.innerHTML = `<div class="file-name">${file.name || file}</div>`;
-        fileBox.appendChild(item);
-      });
-    }
-  } else {
-    console.error("Document not found");
-  }
-}
+//     if (requestData.uploadedFiles && requestData.uploadedFiles.length > 0) {
+//       requestData.uploadedFiles.forEach(file => {
+//         const item = document.createElement("div");
+//         item.className = "file-item";
+//         item.innerHTML = `<div class="file-name">${file.name || file}</div>`;
+//         fileBox.appendChild(item);
+//       });
+//     }
+//   } else {
+//     console.error("Document not found");
+//   }
+// }
 
-fetchRequestDetails();
+// fetchRequestDetails();
 
-// زر الإرسال
-window.sendMessage = function () {
-  if (!requestData) {
-    alert("Data not loaded yet.");
-    return;
-  }
+// // زر الإرسال
+// window.sendMessage = function () {
+//   if (!requestData) {
+//     alert("Data not loaded yet.");
+//     return;
+//   }
 
-  const email = "1929@gaca.gov.sa";
-  const subject = encodeURIComponent(`Simulator Certificate Submission - ${requestData.reqID}`);
-  const body = encodeURIComponent(
-    `Dear GACA,
+//   const email = "1929@gaca.gov.sa";
+//   const subject = encodeURIComponent(`Simulator Certificate Submission - ${requestData.reqID}`);
+//   const body = encodeURIComponent(
+//     `Dear GACA,
 
-Simulator: ${requestData.simulator}
-End Date: ${requestData.endDate}
-Message: ${requestData.message}
+// Simulator: ${requestData.simulator}
+// End Date: ${requestData.endDate}
+// Message: ${requestData.message}
 
-Attached Files: ${requestData.uploadedFiles?.length || 0} file(s)
+// Attached Files: ${requestData.uploadedFiles?.length || 0} file(s)
 
-Best regards.`
-  );
+// Best regards.`
+//   );
 
-  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-};
+//   window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+// };

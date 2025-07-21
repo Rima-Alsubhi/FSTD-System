@@ -1,140 +1,224 @@
-import { auth, db } from './firebaseConfig.js';
+import { auth, db } from '../JS/firebaseConfig.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
+    import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
 
-import {
-  onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
+    const container = document.getElementById('requests-content');
+    const pageTitleEl = document.getElementById('page-title');
+    const controlsBar = document.getElementById('controls-bar');
+    const searchInput = document.getElementById('search-input');
 
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc
-} from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+    const simImageMap = {
+      'A320-200 #1': 'A320-200-1.png',
+      'A320-200 #2': 'A320-200-2.png',
+      'A320-200 #3': 'A320-200-3.png',
+      'A320-200 #4': 'A320-200-4.png',
+      'A320-200 #5': 'A320-200-5.png',
+      'B747 - 400': 'B747-400.png',
+      'A330-340': 'A330-340.png',
+      'B777-268ER': 'B777-200.png',
+      'B777-300': 'B777-300.png',
+      'B787-9': 'B787-9.png'
+    };
 
-const container = document.querySelector('.requests-container');
-const pageTitleEl = document.getElementById('page-title');
+    let allRequests = [];
 
-
-const simImageMap = {
-  'A320-200 #1': 'A320-200-1.png',
-  'A320-200 #2': 'A320-200-2.png',
-  'B747 - 400': 'B747-400.png',
-  'B737 NG': 'B737-NG.png',
-  'A330-340': 'A330-340.png',
-  // ✨ أضف المزيد هنا إذا عندك محاكيات أخرى
-};
-
-
-
-// إنشاء كرت عرض لكل طلب
-function createRequestCard(data, imageUrl) {
-  const {
-    authority = 'Unknown',
-    evaluation = 'N/A',
-    regulatoryID = 'N/A',
-    simulator = 'Unknown Simulator',
-    uploadedFiles = [],
-  } = data;
-
-  const filesCount = Array.isArray(uploadedFiles)
-    ? uploadedFiles.length
-    : (uploadedFiles || 0);
-
-
-
-  return `
-    <div class="request-card">
-      <div class="request-id">${regulatoryID}</div>
-      <div class="request-model">${simulator}</div>
-
-      <div class="simulator-image">
-        <img src="${imageUrl || 'default-sim-image.png'}" alt="Simulator">
-      </div>
-
-      <div class="request-details">
-        <p><strong>Authority:</strong> ${authority}</p>
-        <p><strong>Evaluation Date:</strong> <span class="expire-date">${evaluation}</span></p>
-      </div>
-
-      <div class="request-actions">
-        <div class="file-status">📁 ${filesCount} Files Uploaded</div>
-        <button class="send-btn"> request details</button>
-      </div>
-    </div>`;
-}
-
-
-async function loadRequestsFor(role, uid) {
-  container.innerHTML = '';
-  const isManager = role === 'Manager';
-
-  pageTitleEl.textContent = isManager ? 'Requests from Engineers'
-    : 'My Requests';
-
-  const q = isManager
-    ? query(collection(db, 'EngRequests'))                       // كل الطلبات
-    : query(collection(db, 'EngRequests'), where('engineerId', '==', uid));
-
-  try {
-    const snap = await getDocs(q);
-
-    if (snap.empty) {
-      container.innerHTML = '<p>No requests found.</p>';
-      return;
+    function getSimImage(simName) {
+      const fileName = simImageMap[simName] || 'default.png';
+      return `../Media/simulators/${fileName}`;
     }
-    for (const docSnap of snap.docs) {
-      const requestData = docSnap.data();
-      let imageUrl = null;
 
-      if (requestData.simulator) {
-        try {
-          const simDoc = await getDoc(doc(db, 'Simulators', requestData.simulator));
-          if (simDoc.exists()) {
-            imageUrl = simDoc.data().imageUrl || null;
-          }
-        } catch (simErr) {
-          console.error(`Error fetching simulator data for ${requestData.simulator}`, simErr);
-        }
+    function createRequestCard(data, index) {
+      const {
+        authority = 'Unknown',
+        evaluation = 'N/A',
+        regulatoryID = 'N/A',
+        simulator = 'Unknown Simulator',
+        uploadedFiles = []
+      } = data;
+
+      const filesCount = Array.isArray(uploadedFiles) ? uploadedFiles.length : (uploadedFiles || 0);
+      
+      return `
+        <div class="request-card" style="animation-delay: ${index * 0.1}s">
+          <div class="status-indicator"></div>
+          <div class="request-id">
+            <i class="fas fa-id-card" style="font-size: 12px; margin-bottom: 4px; opacity: 0.7;"></i>
+            ${regulatoryID}
+          </div>
+          <div class="request-model">
+            <i class="fas fa-plane" style="font-size: 12px; margin-bottom: 4px; opacity: 0.7;"></i>
+            ${simulator}
+          </div>
+
+          <div class="simulator-image">
+            <img src="${getSimImage(simulator)}" alt="Simulator" loading="lazy">
+          </div>
+
+          <div class="request-details">
+            <p><strong><i class="fas fa-building" style="margin-right: 6px;"></i>Authority:</strong> ${authority}</p>
+            <p><strong><i class="fas fa-calendar-alt" style="margin-right: 6px;"></i>Evaluation Date:</strong> <span class="expire-date">${evaluation}</span></p>
+          </div>
+
+          <div class="request-actions">
+            <div class="file-status">
+              <i class="fas fa-folder"></i>
+              ${filesCount} Files Uploaded
+            </div>
+            <button class="send-btn" data-regid="${regulatoryID}">
+              <i class="fas fa-eye" style="margin-right: 6px;"></i>
+              Details
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function renderRequests(requests) {
+      if (requests.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No requests found</h3>
+            <p>There are no requests matching your criteria.</p>
+          </div>`;
+        return;
       }
 
-      const cardHTML = createRequestCard(requestData, imageUrl);
-      container.insertAdjacentHTML('beforeend', cardHTML);
+      container.innerHTML = requests.map((req, index) => createRequestCard(req, index)).join('');
+      setupDetailsButtons();
     }
 
-  } catch (err) {
-    console.error('Error loading requests:', err);
-    container.innerHTML = '<p style="color:red">Failed to load requests.</p>';
-  }
-}
+    async function loadRequestsFor(role, uid) {
+      const isManager = role === 'Manager';
+      
+  
+      pageTitleEl.innerHTML = `
+        <i class="fas fa-${isManager ? 'users-cog' : 'user-circle'}" style="margin-right: 12px;"></i>
+        ${isManager ? 'All Engineering Requests' : 'My Requests'}
+      `;
 
-async function fetchUserRoleByUid(uid) {
-  const usersColl = collection(db, 'Users');
-  const q = query(usersColl, where('uid', '==', uid));
-  const snap = await getDocs(q);
+      const q = isManager
+        ? query(collection(db, 'EngRequests'))
+        : query(collection(db, 'EngRequests'), where('engineerId', '==', uid));
 
-  if (snap.empty) {
-    console.warn('⚠️ No Users document contains uid =', uid);
-    return null;
-  }
+      try {
+        const snap = await getDocs(q);
+        
+        if (snap.empty) {
+          allRequests = [];
+          renderRequests([]);
+          controlsBar.style.display = 'none';
+          return;
+        }
 
-  return snap.docs[0].data().role || 'Engineer';
-}
+        allRequests = snap.docs.map(doc => doc.data());
+        renderRequests(allRequests);
+        controlsBar.style.display = 'flex';
+        
+      } catch (e) {
+        console.error('Error loading requests:', e);
+        container.innerHTML = `
+          <div class="empty-state" style="color: #e53e3e;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Requests</h3>
+            <p>Failed to load requests. Please try again later.</p>
+          </div>`;
+      }
+    }
 
+    async function fetchUserRoleByUid(uid) {
+      const usersColl = collection(db, 'Users');
+      const q = query(usersColl, where('uid', '==', uid));
+      const snap = await getDocs(q);
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    pageTitleEl.textContent = 'You are not logged in';
-    return;
-  }
+      if (snap.empty) {
+        console.warn('⚠️ No Users document contains uid =', uid);
+        return null;
+      }
 
-  try {
-    const role = await fetchUserRoleByUid(user.uid) || 'Engineer';
-    console.log('🎭 Detected role:', role);
-    await loadRequestsFor(role, user.uid);
-  } catch (err) {
-    console.error('Failed to determine role:', err);
-    pageTitleEl.textContent = 'Failed to load data';
-  }
-});
+      return snap.docs[0].data().role || 'Engineer';
+    }
+
+    function setupDetailsButtons() {
+      const buttons = document.querySelectorAll('.send-btn');
+      buttons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const regID = button.getAttribute('data-regid');
+          
+        
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = '';
+            window.location.href = `RequestDetails.html?regid=${encodeURIComponent(regID)}`;
+          }, 150);
+        });
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        
+        if (!searchTerm) {
+          renderRequests(allRequests);
+          return;
+        }
+
+        const filteredRequests = allRequests.filter(req => 
+          req.regulatoryID?.toLowerCase().includes(searchTerm) ||
+          req.simulator?.toLowerCase().includes(searchTerm) ||
+          req.authority?.toLowerCase().includes(searchTerm)
+        );
+
+        renderRequests(filteredRequests);
+      });
+    }
+
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Update active state
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+        let filteredRequests = [...allRequests];
+
+        renderRequests(filteredRequests);
+      });
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        pageTitleEl.innerHTML = `
+          <i class="fas fa-sign-in-alt" style="margin-right: 12px;"></i>
+          Authentication Required
+        `;
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-lock"></i>
+            <h3>Please Log In</h3>
+            <p>You need to be logged in to view requests.</p>
+          </div>`;
+        return;
+      }
+
+      try {
+        const role = await fetchUserRoleByUid(user.uid) || 'Engineer';
+        console.log('🎭 Detected role:', role);
+        await loadRequestsFor(role, user.uid);
+      } catch (err) {
+        console.error('Failed to determine role:', err);
+        pageTitleEl.innerHTML = `
+          <i class="fas fa-exclamation-circle" style="margin-right: 12px;"></i>
+          Error Loading Data
+        `;
+        container.innerHTML = `
+          <div class="empty-state" style="color: #e53e3e;">
+            <i class="fas fa-server"></i>
+            <h3>Server Error</h3>
+            <p>Failed to determine user role. Please contact support.</p>
+          </div>`;
+      }
+    });
