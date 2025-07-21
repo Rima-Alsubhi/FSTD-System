@@ -1,6 +1,7 @@
 import { auth, db } from './firebaseConfig.js';
+
 import {
-  onAuthStateChanged,
+  onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
 
 import {
@@ -15,7 +16,7 @@ import {
 const container = document.querySelector('.requests-container');
 const pageTitleEl = document.getElementById('page-title');
 
-// خريطة تربط اسم المحاكي بصورة محلية من مجلد المشروع
+
 const simImageMap = {
   'A320-200 #1': 'A320-200-1.png',
   'A320-200 #2': 'A320-200-2.png',
@@ -53,36 +54,28 @@ function createRequestCard(data, imageUrl) {
       </div>
 
       <div class="request-details">
-        <p><strong>Authority: ${authority}</strong></p>
-        <p>Evaluation Date: <span class="expire-date">${evaluation}</span></p>
+        <p><strong>Authority:</strong> ${authority}</p>
+        <p><strong>Evaluation Date:</strong> <span class="expire-date">${evaluation}</span></p>
       </div>
 
       <div class="request-actions">
         <div class="file-status">📁 ${filesCount} Files Uploaded</div>
-        <button class="send-btn">Send to GACA</button>
+        <button class="send-btn"> request details</button>
       </div>
     </div>`;
 }
 
-// تحميل الطلبات بناءً على دور المستخدم
+
 async function loadRequestsFor(role, uid) {
-  container.innerHTML = '';  // تنظيف المحتوى
+  container.innerHTML = '';
+  const isManager = role === 'Manager';
 
-  pageTitleEl.textContent =
-    role === 'Manager' ? 'Requests from Engineers' : 'My Requests';
+  pageTitleEl.textContent = isManager ? 'Requests from Engineers'
+    : 'My Requests';
 
-  let q;
-
-  if (role === 'Manager') {
-    // المدير يشوف كل الطلبات
-    q = query(collection(db, 'EngRequests'));
-  } else {
-    // المهندس يشوف طلباته فقط
-    q = query(
-      collection(db, 'EngRequests'),
-      where('engineerId', '==', uid)
-    );
-  }
+  const q = isManager
+    ? query(collection(db, 'EngRequests'))                       // كل الطلبات
+    : query(collection(db, 'EngRequests'), where('engineerId', '==', uid));
 
   try {
     const snap = await getDocs(q);
@@ -116,7 +109,20 @@ async function loadRequestsFor(role, uid) {
   }
 }
 
-// عند تسجيل الدخول
+async function fetchUserRoleByUid(uid) {
+  const usersColl = collection(db, 'Users');
+  const q = query(usersColl, where('uid', '==', uid));
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    console.warn('⚠️ No Users document contains uid =', uid);
+    return null;
+  }
+
+  return snap.docs[0].data().role || 'Engineer';
+}
+
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     pageTitleEl.textContent = 'You are not logged in';
@@ -124,11 +130,11 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    const role = userDoc.exists() ? userDoc.data().role : 'Engineer';
-    loadRequestsFor(role, user.uid);
+    const role = await fetchUserRoleByUid(user.uid) || 'Engineer';
+    console.log('🎭 Detected role:', role);
+    await loadRequestsFor(role, user.uid);
   } catch (err) {
-    console.error('Failed to fetch user role:', err);
+    console.error('Failed to determine role:', err);
     pageTitleEl.textContent = 'Failed to load data';
   }
 });
