@@ -1,5 +1,5 @@
 import { db, storage, auth } from '../JS/firebaseConfig.js';
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, setDoc, getDocs, doc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedSimulator = null;
     let selectedSimulatorData = null;
     let uploadedFiles = [];
-    let simulators = [];
+    let allSimulators = [];
 
     loadSimulators();
     setupEventListeners();
@@ -32,10 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function loadSimulators() {
         try {
-            const response = await fetch('../JSON/simulators.json');
-            if (!response.ok) throw new Error('Failed to load simulators');
-            simulators = await response.json();
-            populateSimulatorDropdown();
+            const response = await getDocs(collection(db, 'Simulators'));
+            response.forEach(doc => {
+                allSimulators.push(doc.data());
+            })
+            populateSimulatorDropdown(allSimulators);
             initializeSelect2();
         } catch (error) {
             console.error('Error loading simulators:', error);
@@ -43,14 +44,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function populateSimulatorDropdown() {
+    function populateSimulatorDropdown(allSimulators) {
         const select = getElement('#simulator-select');
         select.innerHTML = '<option value="">Select Simulator</option>';
-        simulators.forEach(sim => {
+        allSimulators.forEach(sim => {
             const option = document.createElement('option');
             option.value = sim.name;
             option.textContent = sim.name;
-            option.dataset.image = `../Media/simulators/${sim.image}`;
+            option.dataset.image = `${sim.image}`;
             select.appendChild(option);
         });
     }
@@ -66,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#simulator-select').on('change', function () {
             selectedSimulator = $(this).val();
             if (selectedSimulator) {
-                selectedSimulatorData = simulators.find(s => s.name === selectedSimulator);
+                selectedSimulatorData = allSimulators.find(s => s.name === selectedSimulator);
                 const img = getElement('#simulator-image');
                 if (selectedSimulatorData && selectedSimulatorData.image) {
-                    img.src = `../Media/simulators/${selectedSimulatorData.image}`;
+                    img.src = `${selectedSimulatorData.image}`;
                     img.style.display = 'block';
                 }
                 updateCertificateDetails();
@@ -84,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function formatSimulatorOption(sim) {
         if (!sim.id) return sim.text;
-        const simData = simulators.find(s => s.name === sim.text);
+        const simData = allSimulators.find(s => s.name === sim.text);
         if (!simData) return sim.text;
         return $(`
       <div class="simulator-option">
@@ -148,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateCertificateDetails() {
         if (!selectedSimulatorData) return;
-        getElement('#evaluation-date').textContent = selectedAuthority === 'GACA' ? selectedSimulatorData.GACA_EvaluationDate : selectedSimulatorData.EASA_EvaluationDate;
-        getElement('#regulatory-id').textContent = selectedAuthority === 'GACA' ? selectedSimulatorData['GACAregulatory ID#'] : selectedSimulatorData['EASAregulatory ID#'];
+        getElement('#evaluation-date').textContent = selectedAuthority === 'GACA' ? selectedSimulatorData.GACA_EvaluationDate.toDate().toLocaleDateString('en-US') : selectedSimulatorData.EASA_EvaluationDate.toDate().toLocaleDateString('en-US');
+        getElement('#regulatory-id').textContent = selectedAuthority === 'GACA' ? selectedSimulatorData['GACAregulatoryID#'] : selectedSimulatorData['EASAregulatoryID#'];
     }
 
     function updateUploadedFilesDisplay() {
@@ -209,11 +210,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const evaluation = selectedAuthority === 'GACA' ? selectedSimulatorData.GACA_EvaluationDate : selectedSimulatorData.EASA_EvaluationDate;
-        const regulatoryID = selectedAuthority === 'GACA' ? selectedSimulatorData['GACAregulatory ID#'] : selectedSimulatorData['EASAregulatory ID#'];
+        const endDate = selectedAuthority === 'GACA' ? selectedSimulatorData.GACA_EvaluationDate.toDate().toLocaleDateString('en-US') : selectedSimulatorData.EASA_EvaluationDate.toDate().toLocaleDateString('en-US');
+        const regulatoryID = selectedAuthority === 'GACA' ? selectedSimulatorData['GACAregulatoryID#'] : selectedSimulatorData['EASAregulatoryID#'];
 
         try {
-            // Upload files to Firebase Storage and collect URLs
             const uploadedFileInfos = [];
             for (const file of uploadedFiles) {
                 const storageRef = ref(storage, `engRequests/${regulatoryID}/${Date.now()}_${file.name}`);
@@ -226,18 +226,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     url,
                 });
             }
-            let requestID = generateNextReqID()
-            // Save the request with file URLs in Firestore
-            await addDoc(collection(db, 'EngRequests'), {
+            let engRequestStatus = "done";
+            let managerRequestStatus = "pending";
+            let billIssueStatus = "pending";
+            let billPaymentStatus = "pending";
+            let evaluationStatus = "pending";
+            let requestID = await generateNextReqID()
+            let docRef = doc(db, 'EngRequests', requestID);
+            await setDoc(docRef, {
                 reqID: requestID,
                 authority: selectedAuthority,
                 simulator: selectedSimulator,
-                evaluation,
+                endDate,
                 regulatoryID,
                 message,
                 uploadedFiles: uploadedFileInfos,
                 engineerId: auth.currentUser.uid,
-                timestamp: new Date()
+                timestamp: new Date(),
+                engRequestStatus,
+                managerRequestStatus,
+                billIssueStatus,
+                billPaymentStatus,
+                evaluationStatus
+
             });
 
             showNotification('Request sent successfully!', 'success');
@@ -253,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const engRef = collection(db, 'EngRequests');
         const snapshot = await getDocs(engRef);
         const count = snapshot.size + 1;
-        return "#R" + count.toString().padStart(3, '0');
+        return "#R" + count.toString().padStart(4, '0');
     }
 
     function clearForm() {

@@ -18,7 +18,7 @@ const closeButtons = document.querySelectorAll('.close');
 
 const validationPatterns = {
     billerName: /^[a-zA-Z\s]{2,50}$/,
-    number: /^\d{8,20}$/,
+    number: /^\d{3,20}$/,
     amount: /^\d+(\.\d{1,2})?$/
 };
 
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ✅ تحديث اسم الحقل بناء على الجهة
 function updateFieldPlaceholder() {
     const biller = billerNameInput.value.trim().toUpperCase();
     if (biller === 'GACA') {
@@ -166,7 +165,6 @@ async function getFormData() {
         "Status": "On Process"
     };
 
-    // 🔥 تخزين السداد أو الحساب بناءً على الجهة
     if (biller === 'GACA') data["Sadad Number"] = number;
     else if (biller === 'EASA') data["Account Number"] = number;
     else data["Identifier"] = number;
@@ -215,4 +213,12 @@ async function generateBillId() {
     });
     const next = Math.max(...ids, 0) + 1;
     return `#B${String(next).padStart(3, '0')}`;
+}
+
+
+function changeRequestStatus() {
+
+    const docRef = doc(db, "EngRequests", requestid);
+
+
 }
