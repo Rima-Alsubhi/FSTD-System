@@ -29,11 +29,9 @@
 
   <main class="main-content">
     <div class="form-container">
-      <div class="form-header">
-        <h2>Add Simulator</h2>
-      </div>
-
       <form id="simulatorForm">
+        <h2 class="form-title">Add Simulator</h2>
+
         <div class="form-group">
           <label for="simName">Simulator Name</label>
           <input type="text" id="simName" name="simName">
@@ -75,7 +73,9 @@
         <div class="form-row">
           <div class="form-group">
             <label for="easaInitialDate">EASA Initial Date</label>
-            <input type="date" id="easaInitialDate" name="easaInitialDate">
+            <div class="horizontal-field">
+              <input type="date" id="easaInitialDate" name="easaInitialDate">
+            </div>
           </div>
           <div class="form-group">
             <label for="gacaEvalDate">GACA Evaluation Date</label>
@@ -85,8 +85,11 @@
 
         <div class="form-group">
           <label for="easaEvalDate">EASA Evaluation Date</label>
-          <input type="date" id="easaEvalDate" name="easaEvalDate">
+          <div class="horizontal-field">
+            <input type="date" id="easaEvalDate" name="easaEvalDate">
+          </div>
         </div>
+
         <div class="upload-section">
           <label for="uploadFiles">Upload Image</label>
           <div class="upload-box" onclick="document.getElementById('uploadFiles').click()">
@@ -96,23 +99,22 @@
             </div>
             <input type="file" id="uploadFiles" name="uploadFiles" accept="image/*">
           </div>
-        </div>
 
-
-        <div id="imagePreview" style="margin-top: 15px; display: none;">
-          <img id="previewImg" src="" alt="Image Preview"
-            style="max-width: 100%; border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
-          <button type="button" id="removeImage"
-            style="display: block; margin-top: 10px; background: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
-            Remove Image
-          </button>
+          <div id="imagePreview" style="margin-top: 15px; display: none;">
+            <img id="previewImg" src="" alt="Image Preview"
+              style="max-width: 100%; border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+            <button type="button" id="removeImage"
+              style="display: block; margin-top: 10px; background: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+              Remove Image
+            </button>
+          </div>
         </div>
 
         <button type="submit" class="add-button">ADD</button>
       </form>
     </div>
   </main>
-
+  <div id="notification" class="notification hidden"></div>
   <!-- ===== Footer ===== -->
   <footer class="footer">
     <div class="footer-grid">
