@@ -1,8 +1,8 @@
 :root {
   --green-dark: #2D4A3D;
   --green-accent: #34693B;
-  --sidebar-bg: #E8E8D2;
-  --container-bg: #F5F5F0;
+  --sidebar-bg: #FFFFFF;
+  --container-bg: #FFFFFF;
   --text-primary: #2C2C2C;
   --text-secondary: #757575;
   --white: #FFFFFF;
@@ -319,7 +319,7 @@ body {
 
 .footer-col {
   flex: 1 1 100px;
- 
+
 }
 
 .footer-logo .logo.small {
@@ -364,7 +364,7 @@ body {
 }
 
 .footer-col about {
-padding: 0% 19%;
+  padding: 0% 19%;
 }
 
 .about p,
@@ -384,6 +384,7 @@ padding: 0% 19%;
   font-size: 12px;
   color: #777;
 }
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .container {
