@@ -1,0 +1,127 @@
+.timeline {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.li {
+    position: relative;
+    text-align: center;
+    flex: 1 0 auto;
+    max-width: 160px;
+    min-width: 120px;
+    transition: transform 0.3s ease;
+}
+
+.timestamp {
+    font-size: 14px;
+    font-weight: 400;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.status {
+    position: relative;
+    padding-top: 20px;
+    border-top: 2px solid #D6DCE0;
+}
+
+.status::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    border: 2px solid #D6DCE0;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.status h4 {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+}
+
+.li.complete .status {
+    border-top-color: #34693B;
+}
+
+.li.complete .status::before {
+    background-color: #34693B;
+    border-color: #34693B;
+}
+
+.li.complete .status h4 {
+    color: #34693B;
+}
+
+@media (max-width: 750px) {
+    .timeline {
+        flex-direction: column;
+        align-items: stretch;
+        overflow-x: visible;
+        margin: 10px 0;
+        position: relative;
+        padding-left: 30px;
+        /* space for vertical line */
+    }
+
+    /* vertical line as a pseudo-element on timeline */
+    .timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 16px;
+        /* halfway of padding-left */
+        width: 2px;
+        height: 100%;
+        background-color: #D6DCE0;
+        z-index: 0;
+    }
+
+    .li {
+        max-width: 100%;
+        min-width: auto;
+        margin-bottom: 30px;
+        flex: none;
+        position: relative;
+        z-index: 1;
+    }
+
+    .status {
+        border-top: none;
+        padding-left: 0;
+        position: relative;
+    }
+
+    .status::before {
+        top: 0;
+        left: -23px;
+        /* position the circle on the vertical line */
+        transform: none;
+        position: absolute;
+        z-index: 1;
+        background-color: white;
+        border: 2px solid #D6DCE0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .timestamp {
+        text-align: left;
+        margin-bottom: 12px;
+    }
+}
