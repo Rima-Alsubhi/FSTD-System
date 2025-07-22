@@ -1,5 +1,5 @@
 import { db } from "../JS/firebaseConfig.js";
-import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 
 async function loadRequests() {
@@ -35,10 +35,9 @@ async function loadRequests() {
             return;
         }
 
-        querySnapshot.forEach(docSnap => {
-            const requests = docSnap.data();
-            const docId = docSnap.id;
 
+        querySnapshot.forEach(docSnap => {
+            const request = docSnap.data();
 
             const outerDiv = document.createElement('div');
             outerDiv.classList.add("outerDiv");
@@ -46,24 +45,19 @@ async function loadRequests() {
             const requestID = document.createElement('div');
             requestID.className = 'bill-id';
             requestID.innerHTML = `
-                        <div class= "greenStyle">
-
-            <div class="bill-id-section">
-
-                    <div class="bill-id">${requests["reqID"] || "—"}</div>
+            <div class="greenStyle">
+                <div class="bill-id-section">
+                    <div class="bill-id">${request["reqID"] || "—"}</div>
+                </div>
             </div>
-            `;
+        `;
 
             outerDiv.appendChild(requestID);
             requestsContainer.appendChild(outerDiv);
 
+            loadRequestsInfo(request, requestsContainer);
         });
-        document.addEventListener("click", (e) => {
-            if (e.target.classList.contains("note-trigger")) {
-                const note = e.target.dataset.note || "—";
-                showMessage(note);
-            }
-        });
+
 
     } catch (error) {
         console.error("Error loading requests:", error);
@@ -80,22 +74,36 @@ async function loadRequests() {
 
 window.addEventListener("DOMContentLoaded", loadRequests);
 
+async function loadRequestsInfo(request, parentElement) {
+    const steps = [
+        { title: "Request Sent to Manager", value: request.engRequestStatus },
+        { title: "Request Sent to Authority", value: request.managerRequestStatus },
+        { title: "Bill Issued", value: request.billIssueStatus },
+        { title: "Bill Paid", value: request.billPaymentStatus },
+        { title: "Evaluation Date Confirmation", value: request.evaluationStatus },
+    ];
 
-function showMessage(message) {
-    const messageContainer = document.createElement('div');
-    const paragraph = document.createElement('p');
-    paragraph.innerText = message;
-    paragraph.classList.add("header-item");
-    messageContainer.classList.add("messageContainer");
-    messageContainer.appendChild(paragraph);
-    const okButton = document.createElement("button");
-    okButton.classList.add("returnButton")
-    okButton.innerHTML = "Return";
-    messageContainer.appendChild(okButton);
+    const requestTimelineContainer = document.createElement('div');
+    requestTimelineContainer.className = 'request-timeline-container';
 
-    document.body.appendChild(messageContainer);
+    const timelineContainer = document.createElement('ul');
+    timelineContainer.className = 'timeline';
 
-    okButton.onclick = () => {
-        messageContainer.remove();
-    };
+    steps.forEach(step => {
+        const li = document.createElement('li');
+        li.className = 'li' + (step.value === 'done' ? ' complete' : '');
+
+        li.innerHTML = `
+            <div class="timestamp"></div>
+            <div class="status">
+                <h4>${step.title}</h4>
+            </div>
+        `;
+
+        timelineContainer.appendChild(li);
+    });
+
+    requestTimelineContainer.appendChild(timelineContainer);
+
+    parentElement.appendChild(requestTimelineContainer);
 }
