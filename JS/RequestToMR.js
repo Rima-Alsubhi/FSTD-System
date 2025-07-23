@@ -1,7 +1,7 @@
 import { db, storage, auth } from '../JS/firebaseConfig.js';
-import { collection, setDoc, getDocs, doc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, setDoc, getDocs, doc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
-
+import { getDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll("[data-link]").forEach(el =>
         el.addEventListener("click", () => {
@@ -260,6 +260,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 billPaymentStatus,
                 evaluationStatus
             });
+
+            // Collection Users uid
+const q = query(collection(db, 'Users'), where("uid", "==", auth.currentUser.uid));
+const querySnapshot = await getDocs(q);
+
+let engineerName = "Unknown Engineer";
+let engineerEmail = auth.currentUser.email || "unknown@example.com";
+
+if (!querySnapshot.empty) {
+    const userData = querySnapshot.docs[0].data();
+    engineerName = userData.fullName || "Unknown Engineer";
+    engineerEmail = userData.email || engineerEmail;
+}
+
+// EmailJS
+await emailjs.send("service_dv84v3m", "template_iozg95w", {
+    recipient_name: "MR Reema",
+    request_id: requestID,
+    engineer_name: engineerName,
+    authority: selectedAuthority,
+    simulator: selectedSimulatorData.simulatorName || "N/A",
+    regulatoryID: regulatoryID,
+    message_body: message,
+    to_email: "reemo63250@gmail.com",
+    sender_name: "Request System",
+    subject: "📥 New Request Submitted by Engineer",
+    reply_email: engineerEmail
+});
+
+console.log("✅ Email sent to MR");
 
             showNotification('Request sent successfully!', 'success');
             clearForm();
