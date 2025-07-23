@@ -40,7 +40,7 @@
     border-radius: 50%;
     border: 2px solid #D6DCE0;
     position: absolute;
-    top: -10px;
+    top: -8px;
     left: 50%;
     transform: translateX(-50%);
     transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -74,16 +74,12 @@
         margin: 10px 0;
         position: relative;
         padding-left: 30px;
-        /* space for vertical line */
     }
 
-    /* vertical line as a pseudo-element on timeline */
     .timeline::before {
         content: '';
         position: absolute;
         top: 0;
-        left: 16px;
-        /* halfway of padding-left */
         width: 2px;
         height: 100%;
         background-color: #D6DCE0;
@@ -108,7 +104,6 @@
     .status::before {
         top: 0;
         left: -23px;
-        /* position the circle on the vertical line */
         transform: none;
         position: absolute;
         z-index: 1;
