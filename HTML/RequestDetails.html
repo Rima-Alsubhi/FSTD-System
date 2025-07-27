@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RequsetDetalis</title>
   <link rel="stylesheet" href="../CSS/RequestDetails.css">
+  <link rel="stylesheet" href="../CSS/welcomePage.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="../Media/logo.png">
 
@@ -22,56 +23,87 @@
     <nav class="nav-buttons">
       <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
       <button data-link="welcomePage.html" class="text-btn">HOME</button>
-      <button data-link="login.html" class="filled-btn">LOGOUT</button>
+      <button data-link="login.html" class="filled-btn">LOGIN</button>
     </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="request-container">
-      <div class="request-header">
-        <div class="request-info">
-          <h2>Requests from Faris</h2>
-          <div class="request-details">
-            <span class="request-id"></span><br />
-            <span class="Simulator-type"></span> 
-          </div>
+
+   <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                ← Back
+            </button>
+            <h1 class="request-title">Requests from <span id="engineerName">Loading...</span></h1>
+            <div class="request-id" id="requestId">#Loading...</div>
+            <div class="request-code" id="requestCode">Loading...</div>
+            <div class="end-date">
+                📅 <span>End date: <span id="endDate">Loading...</span></span>
+            </div>
+            <div class="simulator-icon" id="simulatorInfo">
+                <img src="../Media/simulators/B747-400.png" alt="Flight Simulator" />
+            </div>
         </div>
 
-        <div class="device-image">
-          <img src="../Media/device_beige.png" alt="Flight Simulator Device" />
+        <div class="content">
+            <div class="main-content">
+                <div class="message-section">
+                    <h2>Message from Eng. <span id="messageFromEng">Loading...</span></h2>
+                    <div class="message-content" id="messageContent">
+                        Loading message...
+                    </div>
+                </div>
+
+                <div class="files-section">
+                    <div class="files-title" id="filesCount">Loading Files...</div>
+                    <div class="file-list" id="fileList">
+                        <!-- Files will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="request-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value">
+                            <span class="status-badge" id="requestStatus">Loading...</span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Authority:</span>
+                        <span class="detail-value" id="authority">Loading...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Regulatory ID:</span>
+                        <span class="detail-value" id="regulatoryId">Loading...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Bill Status:</span>
+                        <span class="detail-value">
+                            <span class="status-badge" id="billStatus">Loading...</span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Evaluation:</span>
+                        <span class="detail-value">
+                            <span class="status-badge" id="evaluationStatus">Loading...</span>
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <button class="action-btn" onclick="sendToGACA()">Send to GACA</button>
+                    <button class="action-btn" onclick="sendEvaluation()">Send Evaluation</button>
+                    <button class="action-btn" onclick="addBill()">Add bill</button>
+                </div>
+            </div>
         </div>
-
-        <div class="end-date">
-          <div class="end-date-label">Ends Date:</div>
-          <div class="end-date-value"></div>
-        </div>
-      </div>
-
-      <div class="content-section">
-       
-        <div class="message-section">
-          <h3>Message from Eng. Faris</h3>
-          <textarea id="messageInput" class="message-box" placeholder="Message from engineer" readonly></textarea>
-        </div>
-
-       
-        <div class="file-section">
-          <h3>Uploaded Files</h3>
-
-          <div class="file-upload-area">
-            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
-            <div class="file-upload-text">Loading files...</div>
-          </div>
-
-          
-          <div id="fileList" class="uploaded-file-list"></div>
-        </div>
-      </div>
-
-      <button class="send-button" onclick="sendMessage()">Send to GACA</button>
     </div>
-  </main>
+
+
+
+
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
