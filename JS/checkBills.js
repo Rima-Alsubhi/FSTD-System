@@ -1,8 +1,7 @@
 // import Firebase modules
 import { db } from "../JS/firebaseConfig.js";
-import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-// دالة لتحديد كلاس الحالة (للـ CSS)
 function getStatusClass(status) {
     switch (status.toLowerCase()) {
         case 'paid':
@@ -15,29 +14,26 @@ function getStatusClass(status) {
             return 'status-pending';
     }
 }
+let billId;
 
 async function loadBills() {
     const whiteBox = document.querySelector(".white-box");
 
 
-    // إزالة الحاوية القديمة إذا موجودة
     const existingContainer = whiteBox.querySelector(".bills-container");
     if (existingContainer) {
         existingContainer.remove();
     }
 
-    // إنشاء الحاوية الجديدة للفواتير
     const billsContainer = document.createElement("div");
     billsContainer.className = "bills-container";
     billsContainer.id = "billsContainer";
 
-    // إضافة الحاوية بعد الخط الفاصل
     const divider = whiteBox.querySelector(".divider");
     if (divider) {
         divider.after(billsContainer);
     }
 
-    // عرض رسالة تحميل مؤقتة
     billsContainer.innerHTML = `
         <div style="text-align: center; color: #666; padding: 40px;">
             <div class="spinner" style="margin-bottom: 10px;">Loading bills...</div>
@@ -76,11 +72,9 @@ async function loadBills() {
                 `;
             }
 
-            // الحالة الحالية
             const currentStatus = bill["Status"] || "Pending";
             const statuses = ['Paid', 'On Process', 'Pending'];
 
-            // خيارات الـ select مع تحديد المختار
             const statusOptions = statuses.map(status => {
                 const selected = (status.toLowerCase() === currentStatus.toLowerCase()) ? 'selected' : '';
                 return `<option value="${status}" ${selected}>${status}</option>`;
@@ -92,6 +86,7 @@ async function loadBills() {
             billItem.className = 'bill-item';
 
             const billID = document.createElement('div');
+            billId = bill["Bill ID"];
             billID.className = 'bill-id';
             billID.innerHTML = `
                         <div class= "greenStyle">
@@ -104,13 +99,17 @@ async function loadBills() {
                     </div>
             <div class="authority-badge ${(bill["Authority"] || "").toLowerCase()}">${bill["Authority"] || "—"}</div>
                         </div>`;
+            const billingDateField = bill["Billing Date"];
+            const billingDate = billingDateField
+                ? billingDateField.toDate().toDateString()
+                : "—";
             billItem.innerHTML = `
         
 
                 <div class="details-section">
                     <div class="detail-item">
                         <div class="detail-label">Billing Date</div>
-                        <div class="detail-value">${bill["Billing Date"].toDate().toDateString() || "—"}</div>
+                        <div class="detail-value">${billingDate}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Amount</div>
@@ -160,7 +159,6 @@ async function loadBills() {
     }
 }
 
-// دالة لتحديث حالة الفاتورة في Firebase
 async function updateBillStatus(docId, newStatus) {
     if (!docId) return;
     const billRef = doc(db, "Bills", docId);
@@ -170,9 +168,29 @@ async function updateBillStatus(docId, newStatus) {
         console.error("Failed to update status:", err);
         alert("Failed to update status. Please try again.");
     }
+
+    if (newStatus === "Paid") {
+        const q = query(
+            collection(db, "EngRequests"),
+            where("BillId", "==", billId)
+        );
+
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+            console.log("No request found for this Bill ID:", billId);
+            return;
+        }
+
+        const requestDoc = snapshot.docs[0];
+        const requestRef = doc(db, "EngRequests", requestDoc.id);
+
+        await updateDoc(requestRef, {
+            billPaymentStatus: "done"
+        });
+    }
+
 }
 
-// حدث تغيير على dropdown الحالة
 window.addEventListener("change", (e) => {
     if (e.target.classList.contains("status-select")) {
         const newStatus = e.target.value;
@@ -180,7 +198,6 @@ window.addEventListener("change", (e) => {
 
         updateBillStatus(docId, newStatus);
 
-        // تحديث لون الـ select حسب الحالة الجديدة:
         e.target.classList.remove("status-paid", "status-onprocess", "status-pending");
         e.target.classList.add(getStatusClass(newStatus));
     }

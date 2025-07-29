@@ -47,7 +47,7 @@ async function loadRequests() {
             requestID.innerHTML = `
             <div class="greenStyle">
                 <div class="bill-id-section">
-                    <div class="bill-id">${request["reqID"] || "—"}</div>
+                    <div class="bill-id">${(request["reqID"] || "—")}</div>
                 </div>
             </div>
         `;

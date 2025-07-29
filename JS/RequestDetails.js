@@ -1,15 +1,14 @@
 import { auth, db } from '../JS/firebaseConfig.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
-import { collection, query, where, getDocs, doc, getDoc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+import { collection, query, where, getDocs, doc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
 
-// Simulator image mapping (same as your other page)
 const simImageMap = {
     'A320-200 #1': 'A320-200-1.png',
     'A320-200 #2': 'A320-200-2.png',
     'A320-200 #3': 'A320-200-3.png',
     'A320-200 #4': 'A320-200-4.png',
     'A320-200 #5': 'A320-200-5.png',
-    'B747 - 400': 'B747-400.png',
+    'B747-400': 'B747-400.png',
     'A330-340': 'A330-340.png',
     'B777-268ER': 'B777-200.png',
     'B777-300': 'B777-300.png',
@@ -21,7 +20,6 @@ let currentUser = null;
 let unsubscribeListener = null;
 let currentUserRole = 'Engineer';
 
-// Get URL parameter for regulatory ID
 function getRegIDFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('regid');
@@ -32,7 +30,6 @@ function getSimImage(simName) {
     return `../Media/simulators/${fileName}`;
 }
 
-// Fetch user role by UID (same pattern as your other page)
 async function fetchUserRoleByUid(uid) {
     const usersColl = collection(db, 'Users');
     const q = query(usersColl, where('uid', '==', uid));
@@ -46,7 +43,6 @@ async function fetchUserRoleByUid(uid) {
     return snap.docs[0].data().role || 'Engineer';
 }
 
-// Fetch engineer name by UID
 async function fetchEngineerNameByUid(uid) {
     try {
         const usersColl = collection(db, 'Users');
@@ -64,12 +60,11 @@ async function fetchEngineerNameByUid(uid) {
     }
 }
 
-// Load request data from Firebase
-async function loadRequestData(regID) {
+async function loadRequestData(reqID) {
     try {
         showLoadingState();
 
-        const q = query(collection(db, 'EngRequests'), where('regulatoryID', '==', regID));
+        const q = query(collection(db, 'EngRequests'), where('reqID', '==', reqID));
         const snap = await getDocs(q);
 
         if (snap.empty) {
@@ -80,13 +75,10 @@ async function loadRequestData(regID) {
         const requestDoc = snap.docs[0];
         currentRequestData = requestDoc.data();
 
-        // Get engineer name
         const engineerName = await fetchEngineerNameByUid(currentRequestData.engineerId);
 
-        // Update UI with data
         await updateUI(currentRequestData, engineerName);
 
-        // Setup real-time listener
         setupRealtimeListener(requestDoc.id);
 
     } catch (error) {
@@ -96,45 +88,39 @@ async function loadRequestData(regID) {
 }
 
 async function updateUI(data, engineerName) {
-    // Update header information
     document.getElementById('engineerName').textContent = engineerName;
-    document.getElementById('requestId').textContent = data.reqID || data.regulatoryID;
+    document.getElementById('requestId').textContent = data.reqID || 'N/A';
     document.getElementById('requestCode').textContent = data.simulator || 'Unknown';
     document.getElementById('endDate').textContent = data.endDate || 'N/A';
     document.getElementById('messageFromEng').textContent = engineerName;
     document.getElementById('messageContent').textContent = data.message || 'No message provided.';
 
-    // Update status badges
     updateStatusBadge('requestStatus', data.engRequestStatus || 'pending');
     updateStatusBadge('billStatus', data.billIssueStatus || 'pending');
     updateStatusBadge('evaluationStatus', data.evaluationStatus || 'pending');
 
-    // Update details
     document.getElementById('authority').textContent = data.authority || 'N/A';
     document.getElementById('regulatoryId').textContent = data.regulatoryID || 'N/A';
 
-    // Update files
     updateFilesList(data.uploadedFiles || []);
 
-    // Update simulator info and image
     const simulatorElement = document.getElementById('simulatorInfo');
     const simImage = getSimImage(data.simulator);
     simulatorElement.innerHTML = `<img src="${simImage}" alt="${data.simulator || 'Flight Simulator'}" />`;
 
-    showButtonsBasedOnRole(currentUserRole, data.authority, data.regulatoryID);
+    showButtonsBasedOnRole(currentUserRole, data.authority, data.regulatoryID, data.reqID);
 }
 
-function showButtonsBasedOnRole(role, authority, regid) {
+function showButtonsBasedOnRole(role, authority, requestID) {
     const authorityBtn = document.getElementById('sendToAuthority');
     const addBillBtn = document.getElementById('addBill');
     const evalBtn = document.getElementById('sendEvaluation');
     const viewEvalBtn = document.getElementById('viewEvaluationBtn');
 
-    // فقط المهندس يشوف زر View Evaluation
     if (role === 'Engineer' && viewEvalBtn) {
         viewEvalBtn.style.display = 'inline-block';
         viewEvalBtn.onclick = () => {
-            window.location.href = `/HTML/viewEvaluationForm.html?regid=${encodeURIComponent(regid)}`;
+            window.location.href = `/HTML/viewEvaluationForm.html?regid=${encodeURIComponent(requestID)}`;
         };
     } else if (viewEvalBtn) {
         viewEvalBtn.style.display = 'none';
@@ -144,14 +130,14 @@ function showButtonsBasedOnRole(role, authority, regid) {
         if (addBillBtn) {
             addBillBtn.style.display = 'inline-block';
             addBillBtn.onclick = () => {
-                window.location.href = `/HTML/addBill.html?regid=${encodeURIComponent(regid)}`;
+                window.location.href = `/HTML/addBill.html?regid=${encodeURIComponent(requestID)}`;
             };
         }
 
         if (evalBtn) {
             evalBtn.style.display = 'inline-block';
             evalBtn.onclick = () => {
-                window.location.href = `/HTML/sendEvaluationForm.html?regid=${encodeURIComponent(regid)}`;
+                window.location.href = `/HTML/sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`;
             };
         }
 
@@ -161,11 +147,13 @@ function showButtonsBasedOnRole(role, authority, regid) {
             if (authority === 'GACA') {
                 authorityBtn.textContent = 'Send to GACA';
                 authorityBtn.onclick = () => {
+                    updateManagerRequestStatus()
                     window.location.href = 'mailto:gaca@example.com?subject=Simulator Evaluation Request';
                 };
             } else if (authority === 'EASA') {
                 authorityBtn.textContent = 'Send to EASA';
                 authorityBtn.onclick = () => {
+                    updateManagerRequestStatus()
                     window.location.href = 'mailto:easa@example.com?subject=Simulator Evaluation Request';
                 };
             } else {
@@ -175,12 +163,21 @@ function showButtonsBasedOnRole(role, authority, regid) {
             }
         }
     } else {
-        // إخفاء الأزرار الإدارية عن المهندس
         if (addBillBtn) addBillBtn.style.display = 'none';
         if (evalBtn) evalBtn.style.display = 'none';
         if (authorityBtn) authorityBtn.style.display = 'none';
     }
 }
+
+async function updateManagerRequestStatus() {
+    let requestID = localStorage.getItem("requestID")
+    const docRef = doc(db, 'EngRequests', requestID);
+    await updateDoc(docRef, {
+        managerRequestStatus: "done"
+    });
+    console.log(`Request ${requestID} status updated to done`);
+}
+
 
 function updateStatusBadge(elementId, status) {
     const element = document.getElementById(elementId);
@@ -226,12 +223,11 @@ function showErrorState(title, message) {
             `;
 }
 
-// Action handlers with Firebase updates
 async function sendToGACA() {
     if (!currentRequestData) return;
 
     try {
-        const q = query(collection(db, 'EngRequests'), where('regulatoryID', '==', currentRequestData.regulatoryID));
+        const q = query(collection(db, 'EngRequests'), where('reqID', '==', currentRequestData.reqID));
         const snap = await getDocs(q);
 
         if (!snap.empty) {
@@ -253,7 +249,7 @@ async function sendEvaluation() {
     if (!currentRequestData) return;
 
     try {
-        const q = query(collection(db, 'EngRequests'), where('regulatoryID', '==', currentRequestData.regulatoryID));
+        const q = query(collection(db, 'EngRequests'), where('reqID', '==', currentRequestData.reqID));
         const snap = await getDocs(q);
 
         if (!snap.empty) {
@@ -274,7 +270,7 @@ async function addBill() {
     if (!currentRequestData) return;
 
     try {
-        const q = query(collection(db, 'EngRequests'), where('regulatoryID', '==', currentRequestData.regulatoryID));
+        const q = query(collection(db, 'EngRequests'), where('reqID', '==', currentRequestData.reqID));
         const snap = await getDocs(q);
 
         if (!snap.empty) {
@@ -340,7 +336,6 @@ function goBack() {
     window.history.back();
 }
 
-// Setup real-time listener for updates
 function setupRealtimeListener(docId) {
     if (unsubscribeListener) {
         unsubscribeListener();
@@ -356,13 +351,11 @@ function setupRealtimeListener(docId) {
     });
 }
 
-// Make functions global for button onclick events
 window.sendToGACA = sendToGACA;
 window.sendEvaluation = sendEvaluation;
 window.addBill = addBill;
 window.goBack = goBack;
 
-// Initialize the application
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         showErrorState('Authentication Required', 'Please log in to view request details.');
@@ -370,10 +363,10 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     currentUser = user;
-    const regID = getRegIDFromURL();
+    const reqID = getRegIDFromURL();
 
-    if (!regID) {
-        showErrorState('Invalid Request', 'No regulatory ID provided in the URL.');
+    if (!reqID) {
+        showErrorState('Invalid Request', 'No request ID provided in the URL.');
         return;
     }
 
@@ -381,14 +374,13 @@ onAuthStateChanged(auth, async (user) => {
         const role = await fetchUserRoleByUid(user.uid) || 'Engineer';
         currentUserRole = role;
         console.log('🎭 User role:', role);
-        await loadRequestData(regID);
+        await loadRequestData(reqID);
     } catch (error) {
         console.error('Failed to load request:', error);
         showErrorState('Error', 'Failed to load request details.');
     }
 });
 
-// Cleanup listener when page unloads
 window.addEventListener('beforeunload', () => {
     if (unsubscribeListener) {
         unsubscribeListener();

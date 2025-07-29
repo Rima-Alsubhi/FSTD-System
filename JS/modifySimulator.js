@@ -1,5 +1,5 @@
 import { db } from "../JS/firebaseConfig.js";
-import { collection, getDocs, getDoc, doc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, getDocs, getDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 let selectedSimulator = null;
 let allSimulators = [];

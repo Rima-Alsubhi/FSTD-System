@@ -1,6 +1,6 @@
 import { db } from './firebaseConfig.js';
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 // DOM Elements
 const billForm = document.getElementById('billForm');
@@ -15,6 +15,7 @@ const successModal = document.getElementById('successModal');
 const errorModal = document.getElementById('errorModal');
 const errorMessage = document.getElementById('errorMessage');
 const closeButtons = document.querySelectorAll('.close');
+let id;
 
 const validationPatterns = {
     billerName: /^[a-zA-Z\s]{2,50}$/,
@@ -71,6 +72,7 @@ async function handleFormSubmission(e) {
             const data = await getFormData();
             await storeToFirebase(data);
             showSuccessModal();
+            await saveBillToRequest()
             resetForm();
         } catch (err) {
             console.error(err);
@@ -82,6 +84,14 @@ async function handleFormSubmission(e) {
 
     btn.disabled = false;
     btn.textContent = 'SEND';
+}
+
+async function saveBillToRequest() {
+    let requestID = localStorage.getItem("requestID")
+    const docRef = doc(db, 'EngRequests', requestID);
+    await updateDoc(docRef, {
+        BillId: id
+    });
 }
 
 function validateForm() {
@@ -152,7 +162,7 @@ function clearFieldError(field) {
 }
 
 async function getFormData() {
-    const id = await generateBillId();
+    id = await generateBillId();
     const biller = billerNameInput.value.trim().toUpperCase();
     const number = accountNumberInput.value.trim();
 
@@ -173,9 +183,17 @@ async function getFormData() {
 }
 
 async function storeToFirebase(data) {
+    await updateBillIssueStatus();
     const id = data["Bill ID"];
     await setDoc(doc(db, "Bills", id), data);
-    console.log("Stored:", id);
+}
+
+async function updateBillIssueStatus() {
+    let requestID = localStorage.getItem("requestID")
+    const docRef = doc(db, 'EngRequests', requestID);
+    await updateDoc(docRef, {
+        billIssueStatus: "done"
+    });
 }
 
 function resetForm() {

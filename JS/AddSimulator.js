@@ -45,7 +45,6 @@ function showNotification(message, type = "success") {
   }, 3000);
 }
 
-// ✅ التحقق من الحقول الفارغة قبل الإرسال
 function validateSimulatorForm() {
   const requiredFields = [
     { id: "simName", label: "Simulator Name" },
@@ -79,7 +78,7 @@ document.getElementById("simulatorForm").addEventListener("submit", async (e) =>
 
   if (!validateSimulatorForm()) return;
 
-  let imageUrl = "N/A"; // افتراضي
+  let imageUrl = "N/A";
 
   if (fileInput.files[0]) {
     const formData = new FormData();
