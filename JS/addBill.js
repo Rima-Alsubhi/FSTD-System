@@ -233,10 +233,3 @@ async function generateBillId() {
     return `#B${String(next).padStart(3, '0')}`;
 }
 
-
-function changeRequestStatus() {
-
-    const docRef = doc(db, "EngRequests", requestid);
-
-
-}
