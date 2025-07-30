@@ -45,12 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
       showStatus("Full name must contain two words using letters only.", true);
       return;
     }
-    // if (!/^[a-zA-Z0-9._%+-]+@saudia\.com$/i.test(email)) {
-    //   showStatus("Email must end with @saudia.com.", true);
-    //   return;
-    // }
-    if (!/^\d{10}$/.test(idNumber)) {
-      showStatus("ID must be exactly 10 digits.", true);
+    if (!/^[a-zA-Z0-9._%+-]+@saudia\.com$/i.test(email)) {
+      showStatus("Email must end with @saudia.com.", true);
+      return;
+    }
+
+    if (!/^\d{8}$/.test(idNumber)) {
+      showStatus("Employee ID must be exactly 8 digits.", true);
       return;
     }
 
