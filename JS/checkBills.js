@@ -1,7 +1,9 @@
 // import Firebase modules
 import { db } from "../JS/firebaseConfig.js";
 import { collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-
+// new under process if issue -pending- paid
+// first new
+// new under process paid
 function getStatusClass(status) {
     switch (status.toLowerCase()) {
         case 'paid':
@@ -99,10 +101,18 @@ async function loadBills() {
                     </div>
             <div class="authority-badge ${(bill["Authority"] || "").toLowerCase()}">${bill["Authority"] || "—"}</div>
                         </div>`;
-            const billingDateField = bill["Billing Date"];
-            const billingDate = billingDateField
-                ? billingDateField.toDate().toDateString()
-                : "—";
+            // modifying this (date is not being retrieved)
+            const billingDateField = bill.date || bill.Date;
+            let billingDate = "—";
+
+            if (billingDateField) {
+                if (billingDateField.toDate) {
+                    billingDate = billingDateField.toDate().toDateString();
+                } else {
+                    billingDate = new Date(billingDateField).toDateString();
+                }
+            }
+
             billItem.innerHTML = `
         
 

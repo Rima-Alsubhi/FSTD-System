@@ -4,18 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard</title>
+  <title>Engineer Home Page</title>
   <link rel="stylesheet" href="../CSS/EngineerHomePage.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="../Media/logo.png">
   <script type="module" src="../JS/EngineerHomePage.js"></script>
-
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-
-  <!-- ===== Header ===== -->
   <header class="app-header">
     <div class="logo-group">
       <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo" />
@@ -28,93 +25,130 @@
     </nav>
   </header>
 
-  <!-- ===== Dashboard Main ===== -->
-  <div id="notificationBanner"
-    style="display: none; background-color: #ffefc4; color: #333; padding: 10px; text-align: center; font-weight: bold; border: 1px solid #f0c36d;">
-    <!-- Notification will be shown here -->
-  </div>
-  <div class="container">
-    <aside class="sidebar">
-      <h2>Welcome Rema,</h2>
-      <div class="sidebar-top">
-        <img src="../Media/plane_icon.png" alt="" class="sidebar-icon" />
-        <p>Track, Manage, and Verify Device Certificates with Ease.</p>
-      </div>
-      <div class="menu">
-        <div class="menu-item active">
-          <img src="../Media/dashboard.png" class="icon"> Dashboard
-        </div>
-        <div class="menu">
-
-          <div class="menu-item" onclick="location.href='RequestToMR.html'">
-            <img src="../Media/MR.png" class="icon"> Send Request to MR
-          </div>
-          <div class="menu-item" onclick="location.href ='checkProcess.html'">
-            <img src="../Media/certification.png" class="icon"> Check Certification Process
-          </div>
-          <div class="menu-item" onclick="location.href='RequestsList.html'">
-            <img src="../Media/MR.png" class="icon"> Check my Requests
-          </div>
-
-        </div>
-        <div class="menu-item" onclick="location.href='AddSimulator.html'">
-          <img src="../Media/certification.png" class="icon"> Add New Simulator
-        </div>
-        <div class="menu-item" onclick="location.href='modifySimulator.html'">
-          <img src="../Media/certification.png" class="icon"> Modify Simulator Information
-        </div>
-        <div class="menu-item" onclick="location.href='deleteSimulator.html'">
-          <img src="../Media/certification.png" class="icon"> Delete a Simulator
-        </div>
-        <div class="menu-item" onclick="location.href='viewEvaluationForm.html'">
-          <img src="../Media/certification.png" class="icon"> View Evaluations form
-        </div>
-
-      </div>
-    </aside>
-
-    <main class="main-content">
-      <div class="dashboard-header">
-        <h1>Dashboard</h1>
-        <select id="dashboard-select">
-          <option value="default">📊 Default</option>
-          <option value="requests">📥 Requests</option>
-          <option value="projects">📁 Projects</option>
-          <option value="courses">📚 Online Courses</option>
-        </select>
-      </div>
-
-      <section class="chart-section">
-
-        <div class="chart-image-wrap">
-          <img src="../Media/chart.png" alt="Chart">
-        </div>
-      </section>
-
-      <section class="expiring-section">
-        <h2>Expiring Soon</h2>
-        <div class="cards">
-          <div class="exp-card red">
-            <span class="device">A320-200</span>
-            <span class="time">27 days</span>
-            <img src="../Media/device.png" alt="">
-          </div>
-          <div class="exp-card pink">
-            <span class="device">A320-200</span>
-            <span class="time">37 days</span>
-            <img src="../Media/device_beige.png" alt="">
-          </div>
-          <div class="exp-card blue">
-            <span class="device">A320-200</span>
-            <span class="time">52 days</span>
-            <img src="../Media/device.png" alt="">
-          </div>
-        </div>
-      </section>
-    </main>
+  <div id="notificationBanner">
   </div>
 
-  <!-- ===== Footer ===== -->
+  <div class="dashboard-container">
+    <div class="header">
+      <h1>Simulator Certification Dashboard</h1>
+      <div class="date" id="currentDate"></div>
+    </div>
+
+    <div class="stats-overview">
+      <div class="stat-card">
+        <div class="stat-number" id="totalSimulators">0</div>
+        <div class="stat-label">Total Simulators</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-number" id="expiringSoon">0</div>
+        <div class="stat-label">Expiring Soon<br><small style="font-size: 10px; opacity: 0.8;">GACA: 2mo • EASA:
+            3mo</small></div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-number" id="expired">0</div>
+        <div class="stat-label">Expired</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-number" id="activeRequests">0</div>
+        <div class="stat-label">Active Requests</div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="charts-section">
+        <div class="chart-header">
+          <div class="chart-title">Simulator Status Overview</div>
+          <div class="chart-subtitle">Current status of all simulators</div>
+        </div>
+        <canvas id="statusChart"></canvas>
+      </div>
+
+      <div class="alerts-section">
+        <div class="alert-panel">
+          <div class="panel-header">
+            <div class="panel-icon warning">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="panel-title">Expiring Soon</div>
+          </div>
+          <div id="expiring-list">
+            <div class="loading">
+              <div class="spinner"></div>
+              Loading...
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-panel">
+          <div class="panel-header">
+            <div class="panel-icon info">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="panel-title">Active Requests</div>
+          </div>
+          <div id="requests-list">
+            <div class="loading">
+              <div class="spinner"></div>
+              Loading...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-grid">
+        <div class="menu-card" onclick="location.href='RequestToMR.html'">
+          <div class="menu-icon">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+          <h3>Send Request to MR/CM</h3>
+          <p>Submit certification requests</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='checkProcess.html'">
+          <div class="menu-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <h3>Request Progress Status</h3>
+          <p>Track your request status</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='RequestsList.html'">
+          <div class="menu-icon">
+            <i class="fas fa-list"></i>
+          </div>
+          <h3>Check my Requests</h3>
+          <p>View all your requests</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='AddSimulator.html'">
+          <div class="menu-icon">
+            <i class="fas fa-plus"></i>
+          </div>
+          <h3>Add New Device</h3>
+          <p>Register new simulator</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='modifySimulator.html'">
+          <div class="menu-icon">
+            <i class="fas fa-edit"></i>
+          </div>
+          <h3>Modify Device Information</h3>
+          <p>Update simulator details</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='ViewEvaluationForm.html'">
+          <div class="menu-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h3>View Evaluation Form</h3>
+          <p>Check evaluation forms</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="footer-grid">
       <div class="footer-col">
@@ -124,12 +158,19 @@
         </div>
         <div class="visit-us">
           <span>VISIT US</span>
-          <a href="https://x.com/psaa_sbu?lang=ar" target="_blank" aria-label="Twitter"><i
-              class="fab fa-twitter"></i></a>
-          <a href="tel:+966126860114" aria-label="Phone"><i class="fas fa-phone-alt"></i></a>
-          <a href="mailto:Psaasales@saudia.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://x.com/psaa_sbu?lang=ar" target="_blank" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="tel:+966126860114" aria-label="Phone">
+            <i class="fas fa-phone-alt"></i>
+          </a>
+          <a href="mailto:Psaasales@saudia.com" aria-label="Email">
+            <i class="fas fa-envelope"></i>
+          </a>
           <a href="https://www.linkedin.com/company/prince-sultan-aviation-academy/" target="_blank"
-            aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
         </div>
       </div>
 
@@ -143,7 +184,7 @@
 
       <div class="footer-col contact">
         <h2>Contact Us</h2>
-        <p>Jeddah, KSA&nbsp;21231<br />Psaasales@Saudia.Com<br />+966&nbsp;12&nbsp;686&nbsp;0114</p>
+        <p>Jeddah, KSA 21231<br />Psaasales@Saudia.Com<br />+966 12 686 0114</p>
       </div>
     </div>
 
@@ -153,16 +194,6 @@
   </footer>
 
   <script>
-    document.querySelectorAll('.menu-item').forEach(item => {
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-      });
-    });
-
-    document.getElementById('dashboard-select').addEventListener('change', e => {
-      console.log('Selected:', e.target.value);
-    });
     document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll("[data-link]").forEach((el) =>
         el.addEventListener("click", () => {

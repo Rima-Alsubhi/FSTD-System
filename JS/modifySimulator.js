@@ -1,5 +1,5 @@
 import { db } from "../JS/firebaseConfig.js";
-import { collection, getDocs, getDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { collection, getDocs, getDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 let selectedSimulator = null;
 let allSimulators = [];
@@ -88,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatSimulatorSelection(sim) {
         return sim.text;
     }
+
+    window.loadSimulators = loadSimulators;
 });
 
 async function loadSimulatorInfo(selectedSimulator) {
@@ -109,15 +111,6 @@ async function loadSimulatorInfo(selectedSimulator) {
     } catch (error) {
         console.error("Failed to fetch simulator data:", error);
     }
-}
-
-function changeDateFormat(timestamp) {
-    if (!timestamp || !timestamp.toDate) return "";
-    const date = timestamp.toDate();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
 }
 
 let modifyButton = document.getElementById("modifyButton");
@@ -157,11 +150,53 @@ modifyButton.addEventListener("click", async function (event) {
 
         await updateDoc(docRef, updates);
         showNotification('Simulator Data Updated Successfully!', 'success');
+        selectedSimulator = null;
+        clearForm();
+        await loadSimulators();
+
     } catch (error) {
         console.error('Error updating simulator:', error);
         showNotification('Failed to update simulator', 'error');
     }
 });
+
+let deleteButton = document.getElementById("deleteButton");
+deleteButton.addEventListener("click", async function (event) {
+    event.preventDefault();
+    if (!selectedSimulator) {
+        showNotification('Please select a simulator first.', 'error');
+        return;
+    }
+
+    try {
+        const docRef = doc(db, "Simulators", selectedSimulator);
+        await deleteDoc(docRef);
+        showNotification('Simulator Deleted Successfully!', 'success');
+        selectedSimulator = null;
+        clearForm();
+        await loadSimulators();
+
+    } catch (error) {
+        console.error('Error deleting simulator:', error);
+        showNotification('Failed to delete simulator', 'error');
+    }
+});
+
+function clearForm() {
+    simulatorID.value = '';
+    simulatorName.value = '';
+    aircraftModel.value = '';
+    SimNumber.value = '';
+    GACAregulatory.value = '';
+    EASAregulatory.value = '';
+    GACA_InitialDate.value = '';
+    EASA_InitialDate.value = '';
+    GACA_EvaluationDate.value = '';
+    EASA_EvaluationDate.value = '';
+
+    const img = document.getElementById('simulator-image');
+    if (img) img.style.display = 'none';
+}
 
 function showNotification(message, type) {
     const notification = document.getElementById('notification');

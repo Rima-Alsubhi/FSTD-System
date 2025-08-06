@@ -90,7 +90,6 @@ h4 {
     align-items: center;
 }
 
-/* Scrollbar */
 .bills-container::-webkit-scrollbar {
     width: 8px;
 }
