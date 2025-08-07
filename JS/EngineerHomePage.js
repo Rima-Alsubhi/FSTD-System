@@ -44,7 +44,7 @@ async function checkNotifications(userEmail) {
       banner.style.borderRadius = '8px';
       banner.style.margin = '20px';
       banner.style.cursor = 'pointer';
-      banner.onclick = () => window.location.href = 'viewEvaluationForm.html';
+      banner.onclick = () => window.location.href = 'ViewEvaluationForm.html';
     } else {
       document.getElementById('notificationBanner').style.display = 'none';
     }
