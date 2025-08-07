@@ -385,7 +385,11 @@ body {
   color: #777;
 }
 
-/* RESPONSIVE */
+.certificatesNumber {
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -504,7 +508,6 @@ body {
   font-weight: 500;
 }
 
-/* Main Content Grid */
 .main-content {
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -512,7 +515,6 @@ body {
   margin-bottom: 30px;
 }
 
-/* Charts Section */
 .charts-section {
   background: white;
   border-radius: 12px;
@@ -753,7 +755,6 @@ body {
   opacity: 0.5;
 }
 
-/* Loading */
 .loading {
   display: flex;
   align-items: center;
@@ -794,7 +795,6 @@ body {
   cursor: pointer;
 }
 
-/* Responsive Design */
 @media (max-width: 1200px) {
   .main-content {
     grid-template-columns: 1fr;
@@ -804,7 +804,18 @@ body {
 @media (max-width: 768px) {
   .dashboard-container {
     margin: 10px;
-    padding: 20px;
+    padding: 70px 20px;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .charts-section,
+  .alerts-section {
+    width: 100%;
   }
 
   .stats-overview {
