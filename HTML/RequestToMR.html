@@ -46,6 +46,12 @@
                                 <button class="authority-btn active" data-authority="GACA">GACA</button>
                                 <button class="authority-btn" data-authority="EASA">EASA</button>
                             </div>
+
+                            <label class="form-label">Choose Certificate</label>
+                            <div class="certificate-buttons">
+                                <button class="certificate-btn active" data-certificate="Initial">Initial</button>
+                                <button class="certificate-btn" data-certificate="Recurrent">Recurrent</button>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -53,25 +59,64 @@
                                 <span id="authority-name">GACA</span>'s Regulations & Required Forms
                             </label>
                             <div class="forms-container">
-                                <div id="gaca-forms">
+                                <div id="gaca-forms-initial">
                                     <div class="form-item">
-                                        <a href="https://www.gaca.gov.sa/-/media/Files/PDF/LawsAndRegulation/Aviation-Safety-and-Environmental-Sustainability/Forms/07-Training-Center-EvaluatorExaminer-TCE-Authorization-IssuanceRenewal-Application-Form.pdf"
-                                            target="_blank">
+                                        <a target="_blank">
+                                            GACA FSTD Initial Qualification Application Form
+                                        </a>
+                                    </div>
+                                    <div class="form-item">
+                                        <a target="_blank">
+                                            FSTD Check Request Letter
+                                        </a>
+                                    </div>
+                                    <div class="form-item">
+                                        <a target="_blank">
+                                            Proof of Payment
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div id="gaca-forms-recurrent" class="hidden">
+                                    <div class="form-item">
+                                        <a target="_blank">
+                                            Request for Annual Recurrent Check
+                                        </a>
+                                    </div>
+                                    <div class="form-item">
+                                        <a target="_blank">
                                             FSTDs Qualification Renewal Application Form
                                         </a>
                                     </div>
                                     <div class="form-item">
-                                        <a href="https://www.gaca.gov.sa/-/media/Files/PDF/LawsAndRegulation/Aviation-Safety-and-Environmental-Sustainability/Forms/04--FTD-Qulifications-test.pdf"
-                                            target="_blank">
-                                            Flight Training Device (FTD) Qualification Test Checklist
+                                        <a target="_blank">
+                                            Proof of Payment
                                         </a>
                                     </div>
                                 </div>
-                                <div id="easa-forms" class="hidden">
+
+                                <div id="easa-forms-initial" class="hidden">
                                     <div class="form-item">
-                                        <a href="https://www.easa.europa.eu/sites/default/files/dfu/FO.FCTOA_.000129%20Application%20for%20activities%20related%20to%20FSTD.docx"
-                                            target="_blank">
-                                            EASA Form FO.FCTOA.000129
+                                        <a target="_blank">
+                                            Part A - Administrative Information
+                                        </a>
+                                    </div>
+                                    <div class="form-item">
+                                        <a target="_blank">
+                                            Part B - Technical Information
+                                        </a>
+                                    </div>
+                                    <div class="form-item">
+                                        <a target="_blank">
+                                            Part C - Declarations and Attachments
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div id="easa-forms-recurrent" class="hidden">
+                                    <div class="form-item">
+                                        <a target="_blank">
+                                            No Forms Required
                                         </a>
                                     </div>
                                 </div>
@@ -178,9 +223,9 @@
                     </p>
                 </div>
 
-            <div class="copyright">
-                Copyright © Prince Sultan Aviation Academy
-            </div>
+                <div class="copyright">
+                    Copyright © Prince Sultan Aviation Academy
+                </div>
         </footer>
 
         <div id="notification" class="notification"></div>

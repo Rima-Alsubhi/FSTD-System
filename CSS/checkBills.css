@@ -227,23 +227,22 @@ h4 {
     box-shadow: 0 0 0 3px rgba(77, 122, 89, 0.2);
 }
 
-/* ---------- VIBRANT STATUS COLORS THAT MAKE SENSE ---------- */
 .status-select.status-paid {
     background-color: #E8F5E9;
     color: #1B5E20;
     border-color: #C8E6C9;
 }
 
-.status-select.status-onprocess {
+.status-select.status-underprocess {
     background-color: #FFF8E1;
     color: #FF8F00;
     border-color: #FFE082;
 }
 
-.status-select.status-pending {
-    background-color: #FFEBEE;
-    color: #C62828;
-    border-color: #EF9A9A;
+.status-select.status-new {
+    background-color: #E3F2FD;
+    color: #1565C0;
+    border-color: #90CAF9;
 }
 
 .status-select option {

@@ -61,6 +61,7 @@ body {
     font-weight: 600;
     color: #045223;
     margin-bottom: 10px;
+    margin-top: 10px;
     display: block;
 }
 
@@ -71,12 +72,14 @@ body {
 }
 
 /* Authority Selection */
-.authority-buttons {
+.authority-buttons,
+.certificate-buttons {
     display: flex;
     gap: 10px;
 }
 
-.authority-btn {
+.authority-btn,
+.certificate-btn {
     flex: 1;
     padding: 12px;
     border: none;
@@ -86,12 +89,14 @@ body {
     transition: all 0.3s ease;
 }
 
-.authority-btn.active {
+.authority-btn.active,
+.certificate-btn.active {
     background: #2D4A3D;
     color: white;
 }
 
-.authority-btn:not(.active) {
+.authority-btn:not(.active),
+.certificate-btn:not(.active) {
     background: #F5F5F5;
     color: #333;
 }
