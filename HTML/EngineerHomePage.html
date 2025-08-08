@@ -7,8 +7,7 @@
   <title>Engineer Home Page</title>
   <link rel="stylesheet" href="../CSS/EngineerHomePage.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="icon" type="image/png" href="../Media/logo.png">
-  <script type="module" src="../JS/EngineerHomePage.js"></script>
+  <link rel="icon" type="image/png" href="../Media/logo.png" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -25,8 +24,7 @@
     </nav>
   </header>
 
-  <div id="notificationBanner">
-  </div>
+  <div id="notificationBanner" style="display:none;"></div>
 
   <div class="dashboard-container">
     <div class="header">
@@ -41,8 +39,10 @@
       </div>
       <div class="stat-card warning">
         <div class="stat-number" id="expiringSoon">0</div>
-        <div class="stat-label">Expiring Soon<br><small style="font-size: 10px; opacity: 0.8;">GACA: 2mo • EASA:
-            3mo</small></div>
+        <div class="stat-label">Expiring Soon<br />
+          <small aria-label="GACA 2 months, EASA 3 months" style="font-size: 10px; opacity: 0.8;">GACA: 2mo • EASA:
+            3mo</small>
+        </div>
       </div>
       <div class="stat-card danger">
         <div class="stat-number" id="expired">0</div>
@@ -181,10 +181,7 @@
           ensure efficient, accurate, and reliable handling of certificate issuance, renewal, and expiration.
         </p>
       </div>
-
-
     </div>
-
 
     <div class="copyright">
       Copyright © Prince Sultan Aviation Academy
@@ -203,6 +200,7 @@
       );
     });
   </script>
+  <script type="module" src="../JS/EngineerHomePage.js"></script>
 
 </body>
 

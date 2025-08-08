@@ -1,22 +1,10 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js';
-import { getFirestore, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBhqaYsVfpFmBQd7Nabai74qoNLLQyzGgg",
-  authDomain: "fstd-tracking-system.firebaseapp.com",
-  projectId: "fstd-tracking-system",
-  storageBucket: "fstd-tracking-system.appspot.com",
-  messagingSenderId: "256835114844",
-  appId: "1:256835114844:web:42cd5a42d487cbddf71399",
-  measurementId: "G-4RR5RKHEZE"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+import { auth, db } from "../JS/firebaseConfig.js";
+import { collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
 
 let chart = null;
+const EASA_EXPIRY_THRESHOLD_DAYS = 90;
+const GACA_EXPIRY_THRESHOLD_DAYS = 60;
 
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
   weekday: 'long',
@@ -27,11 +15,9 @@ document.getElementById('currentDate').textContent = new Date().toLocaleDateStri
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    console.log("User authenticated:", user.email);
     await checkNotifications(user.email);
     await loadDashboardData();
   } else {
-    console.warn("User not authenticated");
     showError("Please log in to view the dashboard");
   }
 });
@@ -58,7 +44,9 @@ async function checkNotifications(userEmail) {
       banner.style.borderRadius = '8px';
       banner.style.margin = '20px';
       banner.style.cursor = 'pointer';
-      banner.onclick = () => window.location.href = 'viewEvaluationForm.html';
+      banner.onclick = () => window.location.href = 'ViewEvaluationForm.html';
+    } else {
+      document.getElementById('notificationBanner').style.display = 'none';
     }
   } catch (error) {
     console.error("Error checking notifications:", error);
@@ -85,77 +73,104 @@ async function loadDashboardData() {
 
   } catch (error) {
     console.error("Error loading dashboard data:", error);
-    showError("Failed to load dashboard data");
+    showError("Failed to load dashboard data: " + error.message);
   }
 }
 
-function processSimulatorData(simulators) {
+function analyzeSimulatorStatus(sim) {
   const currentDate = new Date();
-  let totalCount = simulators.length;
-  let expiringSoonCount = 0;
-  let expiredCount = 0;
+  const easaDate = sim.EASA_EvaluationDate ? new Date(sim.EASA_EvaluationDate) : null;
+  const gacaDate = sim.GACA_EvaluationDate ? new Date(sim.GACA_EvaluationDate) : null;
+
+  const results = [];
+
+  if (easaDate) {
+    const easaDaysDiff = Math.ceil((easaDate - currentDate) / (1000 * 60 * 60 * 24));
+
+    if (easaDaysDiff < 0) {
+      results.push({ status: 'expired', days: easaDaysDiff, authority: 'EASA', expirationDate: easaDate });
+    } else if (easaDaysDiff <= EASA_EXPIRY_THRESHOLD_DAYS) {
+      results.push({ status: 'expiring', days: easaDaysDiff, authority: 'EASA', expirationDate: easaDate });
+    } else {
+      results.push({ status: 'active', days: easaDaysDiff, authority: 'EASA', expirationDate: easaDate });
+    }
+  }
+
+  if (gacaDate) {
+    const gacaDaysDiff = Math.ceil((gacaDate - currentDate) / (1000 * 60 * 60 * 24));
+
+    if (gacaDaysDiff < 0) {
+      results.push({ status: 'expired', days: gacaDaysDiff, authority: 'GACA', expirationDate: gacaDate });
+    } else if (gacaDaysDiff <= GACA_EXPIRY_THRESHOLD_DAYS) {
+      results.push({ status: 'expiring', days: gacaDaysDiff, authority: 'GACA', expirationDate: gacaDate });
+    } else {
+      results.push({ status: 'active', days: gacaDaysDiff, authority: 'GACA', expirationDate: gacaDate });
+    }
+  }
+
+  if (results.length === 0) {
+    return [{ status: 'pending' }];
+  }
+
+  return results;
+}
+
+function processSimulatorData(simulators) {
   const expiringList = [];
+  let totalCount = simulators.length;
+  let expiredCount = 0;
+  let expiredGACA = 0;
+  let expiredEASA = 0;
+  let expiringCount = 0;
+  let expiringEASA = 0;
+  let expiringGACA = 0;
 
   simulators.forEach(sim => {
-    const easaDate = sim.EASA_EvaluationDate ? new Date(sim.EASA_EvaluationDate) : null;
-    const gacaDate = sim.GACA_EvaluationDate ? new Date(sim.GACA_EvaluationDate) : null;
+    const results = analyzeSimulatorStatus(sim);
 
-    if (easaDate) {
-      const daysDiff = Math.ceil((easaDate - currentDate) / (1000 * 60 * 60 * 24));
+    results.forEach(result => {
 
-      if (daysDiff < 0) {
+      if (result.status === 'expired') {
         expiredCount++;
-      } else if (daysDiff <= 90) {
-        expiringSoonCount++;
+        if (result.authority === 'EASA') expiredEASA++;
+        else if (result.authority === 'GACA') expiredGACA++;
+      }
+
+      if (result.status === 'expiring') {
+        expiringCount++;
         expiringList.push({
           name: sim.simulatorName || sim.aircraftModel || 'Unknown',
-          days: daysDiff,
-          authority: 'EASA',
+          days: result.days,
+          authority: result.authority,
           model: sim.aircraftModel || '',
-          expirationDate: easaDate
+          expirationDate: result.expirationDate,
+          simulatorId: sim.id
         });
+
+        if (result.authority === 'EASA') expiringEASA++;
+        else if (result.authority === 'GACA') expiringGACA++;
       }
-    }
-
-    if (gacaDate) {
-      const daysDiff = Math.ceil((gacaDate - currentDate) / (1000 * 60 * 60 * 24));
-
-      if (daysDiff < 0) {
-        expiredCount++;
-      } else if (daysDiff <= 60) {
-        expiringSoonCount++;
-        expiringList.push({
-          name: sim.simulatorName || sim.aircraftModel || 'Unknown',
-          days: daysDiff,
-          authority: 'GACA',
-          model: sim.aircraftModel || '',
-          expirationDate: gacaDate
-        });
-      }
-    }
-  });
-
-  const uniqueExpiring = [];
-  const seen = new Set();
-
-  expiringList.forEach(item => {
-    const key = `${item.name}-${item.authority}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      uniqueExpiring.push(item);
-    }
+    });
   });
 
   document.getElementById('totalSimulators').textContent = totalCount;
-  document.getElementById('expiringSoon').textContent = uniqueExpiring.length;
-  document.getElementById('expired').textContent = expiredCount;
 
-  displayExpiringSimulators(uniqueExpiring);
+  document.getElementById('expiringSoon').innerHTML = `
+    ${expiringCount} <small class="certificatesNumber" style="font-size: 10px; opacity: 0.7;">
+    (GACA: ${expiringGACA}, EASA: ${expiringEASA})</small>
+  `;
+
+  document.getElementById('expired').innerHTML = `
+    ${expiredCount} <small class="certificatesNumber" style="font-size: 10px; opacity: 0.7;">
+    (GACA: ${expiredGACA}, EASA: ${expiredEASA})</small>
+  `;
+
+  displayExpiringSimulators(expiringList);
 }
 
 function processRequestData(requests) {
   const activeRequests = requests.filter(req =>
-    req.engRequestStatus !== 'done' || req.evaluationStatus === 'pending'
+    !req.EvaluationID || req.EvaluationID.trim() === ""
   );
 
   document.getElementById('activeRequests').textContent = activeRequests.length;
@@ -242,10 +257,9 @@ function displayActiveRequests(requests) {
         <h4 style="font-size: 13px; margin-bottom: 3px;">${req.simulator || req.reqID || 'Request'}</h4>
         <p style="font-size: 11px; color: #6c757d;">${req.authority || 'Unknown Authority'}</p>
       </div>
-      <span class="request-status ${req.engRequestStatus === 'done' ? 'status-done' :
-      req.engRequestStatus === 'pending' ? 'status-pending' : 'status-processing'
+      <span class="request-status status-done"
     }">
-        ${req.engRequestStatus || 'Pending'}
+        Active
       </span>
     </div>
   `).join('');
@@ -256,38 +270,29 @@ function createChart(simulators) {
   let active = 0, expiring = 0, expired = 0, pending = 0;
 
   simulators.forEach(sim => {
-    const easaDate = sim.EASA_EvaluationDate ? new Date(sim.EASA_EvaluationDate) : null;
-    const gacaDate = sim.GACA_EvaluationDate ? new Date(sim.GACA_EvaluationDate) : null;
+    const results = analyzeSimulatorStatus(sim);
 
-    let hasValidCert = false;
+    let hasExpired = false;
+    let hasExpiring = false;
+    let hasActive = false;
+    let hasPending = false;
 
-    if (easaDate) {
-      hasValidCert = true;
-      const daysDiff = Math.ceil((easaDate - currentDate) / (1000 * 60 * 60 * 24));
-
-      if (daysDiff < 0) {
-        expired++;
-      } else if (daysDiff <= 90) {
-        expiring++;
-      } else {
-        active++;
+    results.forEach(result => {
+      switch (result.status) {
+        case 'expired': hasExpired = true; break;
+        case 'expiring': hasExpiring = true; break;
+        case 'active': hasActive = true; break;
+        default: hasPending = true;
       }
-    }
+    });
 
-    if (gacaDate) {
-      hasValidCert = true;
-      const daysDiff = Math.ceil((gacaDate - currentDate) / (1000 * 60 * 60 * 24));
-
-      if (daysDiff < 0) {
-        expired++;
-      } else if (daysDiff <= 60) {
-        expiring++;
-      } else {
-        active++;
-      }
-    }
-
-    if (!hasValidCert) {
+    if (hasExpired) {
+      expired++;
+    } else if (hasExpiring) {
+      expiring++;
+    } else if (hasActive) {
+      active++;
+    } else {
       pending++;
     }
   });
@@ -311,9 +316,7 @@ function createChart(simulators) {
       responsive: true,
       maintainAspectRatio: true,
       plugins: {
-        legend: {
-          display: false
-        },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             afterBody: function (context) {
@@ -328,26 +331,12 @@ function createChart(simulators) {
       scales: {
         y: {
           beginAtZero: true,
-          ticks: {
-            stepSize: 1,
-            font: {
-              size: 12
-            }
-          },
-          grid: {
-            color: '#e9ecef'
-          }
+          ticks: { stepSize: 1, font: { size: 12 } },
+          grid: { color: '#e9ecef' }
         },
         x: {
-          ticks: {
-            font: {
-              size: 12,
-              weight: '500'
-            }
-          },
-          grid: {
-            display: false
-          }
+          ticks: { font: { size: 12, weight: '500' } },
+          grid: { display: false }
         }
       }
     }

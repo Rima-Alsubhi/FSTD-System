@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
     let selectedAuthority = 'GACA';
+    let selectedCertificate = 'Initial';
     let selectedSimulator = null;
     let selectedSimulatorData = null;
     let uploadedFiles = [];
@@ -94,12 +95,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.authority-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 selectedAuthority = btn.dataset.authority;
+                toggleRegulations();
                 document.querySelector('#authority-name').textContent = selectedAuthority;
                 document.querySelector('#authority-badge').textContent = selectedAuthority;
+            });
+        });
+        document.querySelectorAll('.certificate-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.certificate-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedCertificate = btn.dataset.certificate;
                 toggleRegulations();
                 if (selectedSimulatorData) updateCertificateDetails();
             });
         });
+
+
 
         const uploadArea = document.querySelector('#upload-area');
         uploadArea.addEventListener('click', () => document.querySelector('#file-input').click());
@@ -133,9 +144,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function toggleRegulations() {
-        document.querySelector('#gaca-forms').style.display = selectedAuthority === 'GACA' ? 'block' : 'none';
-        document.querySelector('#easa-forms').style.display = selectedAuthority === 'EASA' ? 'block' : 'none';
+        document.querySelector('#gaca-forms-initial').style.display = selectedAuthority === 'GACA' && selectedCertificate === 'Initial' ? 'block' : 'none';
+        document.querySelector('#gaca-forms-recurrent').style.display = selectedAuthority === 'GACA' && selectedCertificate === 'Recurrent' ? 'block' : 'none';
+        document.querySelector('#easa-forms-initial').style.display = selectedAuthority === 'EASA' && selectedCertificate === 'Initial' ? 'block' : 'none';
+        document.querySelector('#easa-forms-recurrent').style.display = selectedAuthority === 'EASA' && selectedCertificate === 'Recurrent' ? 'block' : 'none';
     }
+
+
 
     function updateCertificateDetails() {
         if (!selectedSimulatorData) return;
@@ -272,7 +287,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 managerRequestStatus,
                 billIssueStatus,
                 billPaymentStatus,
-                evaluationStatus
+                evaluationStatus,
+                certificateType: selectedCertificate
             });
 
             const q = query(collection(db, 'Users'), where("uid", "==", auth.currentUser.uid));

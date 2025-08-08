@@ -1,19 +1,17 @@
 // import Firebase modules
 import { db } from "../JS/firebaseConfig.js";
 import { collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-// new under process if issue -pending- paid
-// first new
-// new under process paid
+
 function getStatusClass(status) {
     switch (status.toLowerCase()) {
         case 'paid':
             return 'status-paid';
-        case 'on process':
-            return 'status-onprocess';
-        case 'pending':
-            return 'status-pending';
+        case 'under process':
+            return 'status-underprocess';
+        case 'new':
+            return 'status-new';
         default:
-            return 'status-pending';
+            return 'status-new';
     }
 }
 let billId;
@@ -70,12 +68,12 @@ async function loadBills() {
             } else {
                 accountInfoHtml = `
                     <div class="detail-label">Account Number</div>
-                    <div class="detail-value">${bill["Account Number"] || bill["Acount Number"] || "—"}</div>
+                    <div class="detail-value">${bill["Account Number"] || bill["Account Number"] || "—"}</div>
                 `;
             }
 
-            const currentStatus = bill["Status"] || "Pending";
-            const statuses = ['Paid', 'On Process', 'Pending'];
+            const currentStatus = bill["Status"] || "new";
+            const statuses = ['Paid', 'Under Process', 'New'];
 
             const statusOptions = statuses.map(status => {
                 const selected = (status.toLowerCase() === currentStatus.toLowerCase()) ? 'selected' : '';
@@ -139,8 +137,11 @@ async function loadBills() {
 <div class="detail-value note-trigger fas fa-envelope" data-note="${(bill["Notes"] || "—").replace(/"/g, '&quot;')}"></div>
                         </div>
                         <div class="status-section">
-                    <select class="status-select ${getStatusClass(currentStatus)}" data-doc-id="${docId}">
-                        ${statusOptions}
+                    <select 
+                     class="status-select ${getStatusClass(currentStatus)}" 
+                     data-doc-id="${docId}" 
+                     data-bill-id="${bill['Bill ID'] || ''}">
+                     ${statusOptions}
                     </select>
                 </div>
             `;
@@ -168,8 +169,7 @@ async function loadBills() {
         `;
     }
 }
-
-async function updateBillStatus(docId, newStatus) {
+async function updateBillStatus(docId, newStatus, billId) {
     if (!docId) return;
     const billRef = doc(db, "Bills", docId);
     try {
@@ -198,17 +198,17 @@ async function updateBillStatus(docId, newStatus) {
             billPaymentStatus: "done"
         });
     }
-
 }
+
 
 window.addEventListener("change", (e) => {
     if (e.target.classList.contains("status-select")) {
         const newStatus = e.target.value;
         const docId = e.target.getAttribute("data-doc-id");
+        const billId = e.target.getAttribute("data-bill-id");
+        updateBillStatus(docId, newStatus, billId);
 
-        updateBillStatus(docId, newStatus);
-
-        e.target.classList.remove("status-paid", "status-onprocess", "status-pending");
+        e.target.classList.remove("status-paid", "status-underprocess", "status-new");
         e.target.classList.add(getStatusClass(newStatus));
     }
 });
