@@ -150,7 +150,7 @@ function setupDetailsButtons() {
       setTimeout(() => {
         button.style.transform = '';
         localStorage.setItem("requestID", reqID);
-        window.location.href = `RequestDetails.html?regid=${encodeURIComponent(reqID)}`;
+        window.open(`RequestDetails.html?regid=${encodeURIComponent(reqID)}`,'_blank');
       }, 150);
     });
   });

@@ -251,7 +251,10 @@ body {
   margin: 0 0 12px;
   font-size: 16px;
 }
+.about {
 
+  margin-top: 40px;
+}
 .about p,
 .contact p {
   font-size: 13px;
@@ -264,10 +267,13 @@ body {
 }
 
 .copyright {
-  margin-top: 20px;
+  width: 100%;
+  padding-top: 20px;
   text-align: center;
   font-size: 12px;
   color: #777;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 40px;
 }
 
 /* Modal */
