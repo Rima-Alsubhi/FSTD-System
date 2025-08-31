@@ -121,7 +121,7 @@ function showButtonsBasedOnRole(role, authority, requestID) {
     if (role === 'Engineer' && viewEvalBtn) {
         viewEvalBtn.style.display = 'inline-block';
         viewEvalBtn.onclick = () => {
-            window.open(`/HTML/ViewEvaluationForm.html?regid=${encodeURIComponent(requestID)}`, '_blank');
+            window.open(`ViewEvaluationForm.html?regid=${encodeURIComponent(requestID)}`, '_blank');
         };
     } else if (viewEvalBtn) {
         viewEvalBtn.style.display = 'none';
