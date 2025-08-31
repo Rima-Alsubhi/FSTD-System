@@ -131,14 +131,14 @@ function showButtonsBasedOnRole(role, authority, requestID) {
         if (addBillBtn) {
             addBillBtn.style.display = 'inline-block';
             addBillBtn.onclick = () => {
-                window.open(`/addBill.html?regid=${encodeURIComponent(requestID)}`, '_blank');
+                window.open(`addBill.html?regid=${encodeURIComponent(requestID)}`, '_blank');
             };
         }
 
         if (evalBtn) {
             evalBtn.style.display = 'inline-block';
             evalBtn.onclick = () => {
-                window.open(`/sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`, '_blank');
+                window.open(`sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`, '_blank');
             };
         }
 
@@ -374,13 +374,14 @@ onAuthStateChanged(auth, async (user) => {
     try {
         const role = await fetchUserRoleByUid(user.uid) || 'Engineer';
         currentUserRole = role;
-        console.log('🎭 User role:', role);
+
         await loadRequestData(reqID);
     } catch (error) {
         console.error('Failed to load request:', error);
         showErrorState('Error', 'Failed to load request details.');
     }
 });
+
 
 window.addEventListener('beforeunload', () => {
     if (unsubscribeListener) {
