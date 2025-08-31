@@ -86,7 +86,7 @@ async function loadBills() {
 
             const billID = document.createElement('div');
             billId = bill["Bill ID"];
-            billID.className = 'bill-id';
+            billID.className = 'bill-id-container';
             billID.innerHTML = `
                         <div class= "greenStyle">
 
