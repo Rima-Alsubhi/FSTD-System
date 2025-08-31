@@ -1,4 +1,3 @@
-// import Firebase modules
 import { db } from "../JS/firebaseConfig.js";
 import { collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
@@ -63,7 +62,7 @@ async function loadBills() {
             if ((bill["Authority"] || "").toLowerCase() === "gaca") {
                 accountInfoHtml = `
                     <div class="detail-label">SADAD Number</div>
-                    <div class="detail-value">${bill["SADAD Number"] || "—"}</div>
+                    <div class="detail-value">${bill["Sadad Number"] || "—"}</div>
                 `;
             } else {
                 accountInfoHtml = `
@@ -128,7 +127,7 @@ async function loadBills() {
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Bill Number</div>
-                        <div class="detail-value">${bill["Bill Number"] || "—"}</div>
+                        <div class="detail-value">${bill["Bill ID"] || "—"}</div>
                     </div>
                 </div>
 
