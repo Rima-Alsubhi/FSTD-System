@@ -4,7 +4,7 @@ A comprehensive web-based management system designed for aviation training organ
 
 ## 🚀 Overview
 
-The Flight Simulator Tracking System (FSTS) is a robust enterprise application built to streamline the complex process of managing flight simulator certifications across multiple regulatory authorities (GACA and EASA). The system facilitates seamless collaboration between engineers, managers, and finance departments while ensuring compliance with aviation safety standards.
+The Flight Simulator Training Devices (FSTD) Tracking System is a robust enterprise application built to streamline the complex process of managing flight simulator certifications across multiple regulatory authorities (GACA and EASA). The system facilitates seamless collaboration between engineers, managers, and finance departments while ensuring compliance with aviation safety standards.
 
 ## ✨ Key Features
 
@@ -23,7 +23,7 @@ The Flight Simulator Tracking System (FSTS) is a robust enterprise application b
 - **Security**: Firebase Security Rules with role-based access control
 - **Email Service**: EmailJS for automated notifications
 - **Image Hosting**: ImgBB for simulator image storage
-- **UI Components**: Select2, Font Awesome.
+- **UI Components**: Select2, Font Awesome
 
 ## 👥 User Roles
 
@@ -35,7 +35,7 @@ The Flight Simulator Tracking System (FSTS) is a robust enterprise application b
 - Check evaluation date information
 
 ### Manager
-- Review all the engineers' requests
+- Review all engineers' requests
 - Submit requests to regulatory authorities (GACA/EASA)
 - Generate evaluation forms
 - Monitor all organizational requests
@@ -49,8 +49,8 @@ The Flight Simulator Tracking System (FSTS) is a robust enterprise application b
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-organization/fsts.git
-   cd fsts
+   git clone https://github.com/Rima-Alsubhi/FSTD-System.git
+   cd FSTD-System
    ```
 
 2. **Firebase Configuration**
