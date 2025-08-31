@@ -131,14 +131,14 @@ function showButtonsBasedOnRole(role, authority, requestID) {
         if (addBillBtn) {
             addBillBtn.style.display = 'inline-block';
             addBillBtn.onclick = () => {
-                window.open(`addBill.html?regid=${encodeURIComponent(requestID)}`, '_blank');
+                window.open(`/addBill.html?regid=${encodeURIComponent(requestID)}`, '_blank');
             };
         }
 
         if (evalBtn) {
             evalBtn.style.display = 'inline-block';
             evalBtn.onclick = () => {
-                window.open(`sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`, '_blank');
+                window.open(`/sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`, '_blank');
             };
         }
 
