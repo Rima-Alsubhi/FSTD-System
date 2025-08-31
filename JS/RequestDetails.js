@@ -121,7 +121,7 @@ function showButtonsBasedOnRole(role, authority, requestID) {
     if (role === 'Engineer' && viewEvalBtn) {
         viewEvalBtn.style.display = 'inline-block';
         viewEvalBtn.onclick = () => {
-            window.location.href = `/HTML/viewEvaluationForm.html?regid=${encodeURIComponent(requestID)}`;
+            window.open(`/HTML/viewEvaluationForm.html?regid=${encodeURIComponent(requestID)}`,'_blank');
         };
     } else if (viewEvalBtn) {
         viewEvalBtn.style.display = 'none';
@@ -131,14 +131,14 @@ function showButtonsBasedOnRole(role, authority, requestID) {
         if (addBillBtn) {
             addBillBtn.style.display = 'inline-block';
             addBillBtn.onclick = () => {
-                window.location.href = `/HTML/addBill.html?regid=${encodeURIComponent(requestID)}`;
+                window.open(`/HTML/addBill.html?regid=${encodeURIComponent(requestID)}`,'_blank');
             };
         }
 
         if (evalBtn) {
             evalBtn.style.display = 'inline-block';
             evalBtn.onclick = () => {
-                window.location.href = `/HTML/sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`;
+                window.open(`/HTML/sendEvaluationForm.html?regid=${encodeURIComponent(requestID)}`,'_blank');
             };
         }
 
