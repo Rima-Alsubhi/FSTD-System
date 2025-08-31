@@ -67,7 +67,7 @@ async function loadBills() {
             } else {
                 accountInfoHtml = `
                     <div class="detail-label">Account Number</div>
-                    <div class="detail-value">${bill["Account Number"] || bill["Account Number"] || "—"}</div>
+                    <div class="detail-value">${bill["Account Number"] || "—"}</div>
                 `;
             }
 
