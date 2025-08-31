@@ -1,74 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>View Evaluation Form</title>
-  <link rel="stylesheet" href="../CSS/welcomePage.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../CSS/welcomePage.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" type="image/png" href="../Media/logo.png">
-  <script type="module" src="../JS/viewEvaluationForm.js"></script>
+  <script type="module" src="../JS/ViewEvaluationForm.js"></script>
 
 </head>
+
 <body>
 
-<!-- ===== Header ===== -->
-<header class="app-header">
-  <div class="logo-group">
-    <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo"/>
-    <img src="../Media/academy_text_logo.png" class="logo-text" alt="Academy logo"/>
-  </div>
-  <nav class="nav-buttons">
-    <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
-    <button data-link="welcomePage.html" class="text-btn">HOME</button>
-    <button data-link="login.html" class="filled-btn">LOGOUT</button>
-  </nav>
-</header>
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <div class="logo-group">
+      <img src="../Media/saudia_logo.png" class="logo" alt="Saudia logo" />
+      <img src="../Media/academy_text_logo.png" class="logo-text" alt="Academy logo" />
+    </div>
+    <nav class="nav-buttons">
+      <button data-link="UserProfile.html" class="text-btn">PROFILE</button>
+      <button data-link="welcomePage.html" class="text-btn">HOME</button>
+      <button data-link="login.html" class="filled-btn">LOGOUT</button>
+    </nav>
+  </header>
 
-<!-- ===== Main Section ===== -->
-<main class="login-container">
-  <div class="login-form-container">
-    <div class="login-form-row">
-      <div class="login-form-column">
-        <h2 class="login-title">Your Evaluation & Session Info</h2>
-        <div id="formDisplay">
-          <p><strong>Evaluation Date:</strong> <span id="evalDate">Loading...</span></p>
-          <p><strong>Session time:</strong> <span id="sessionDate">Loading...</span></p>
+  <!-- ===== Main Section ===== -->
+  <main class="login-container">
+    <div class="login-form-container">
+      <div class="login-form-row">
+        <div class="login-form-column">
+          <h2 class="login-title">Your Evaluation & Session Info</h2>
+          <div id="formDisplay">
+            <p><strong>Evaluation Date:</strong> <span id="evalDate">Loading...</span></p>
+            <p><strong>Session time:</strong> <span id="sessionDate">Loading...</span></p>
+          </div>
+          <div id="formMessage" style="margin-top: 20px; color: red;"></div>
         </div>
-        <div id="formMessage" style="margin-top: 20px; color: red;"></div>
-      </div>
-      <div class="login-form-column login-image">
-        <img src="../Media/simulator.png" alt="Form" />
-      </div>
-    </div>
-  </div>
-</main>
-
-<!-- ===== Footer ===== -->
-<footer class="footer">
-  <div class="footer-grid">
-    <div class="footer-col">
-      <div class="logo-group footer-logo">
-        <img src="../Media/saudia_logo.png" class="logo small" alt="Saudia logo"/>
-        <img src="../Media/academy_text_logo.png" class="logo-text small" alt="Academy logo"/>
-      </div>
-      <div class="visit-us">
-        <span>VISIT US</span>
-        <a href="https://x.com/psaa_sbu?lang=ar" target="_blank"><i class="fab fa-twitter"></i></a>
-        <a href="tel:+966126860114"><i class="fas fa-phone-alt"></i></a>
-        <a href="mailto:Psaasales@saudia.com"><i class="fas fa-envelope"></i></a>
-        <a href="https://www.linkedin.com/company/prince-sultan-aviation-academy/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        <div class="login-form-column login-image">
+          <img src="../Media/simulator.png" alt="Form" />
+        </div>
       </div>
     </div>
+  </main>
 
-    <div class="footer-col about">
-      <h2>About Us</h2>
-      <p>We provide a smart system to track and manage certificates for aviation simulation devices. Our goal is to
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="logo-group footer-logo">
+          <img src="../Media/saudia_logo.png" class="logo small" alt="Saudia logo" />
+          <img src="../Media/academy_text_logo.png" class="logo-text small" alt="Academy logo" />
+        </div>
+        <div class="visit-us">
+          <span>VISIT US</span>
+          <a href="https://x.com/psaa_sbu?lang=ar" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="tel:+966126860114"><i class="fas fa-phone-alt"></i></a>
+          <a href="mailto:Psaasales@saudia.com"><i class="fas fa-envelope"></i></a>
+          <a href="https://www.linkedin.com/company/prince-sultan-aviation-academy/" target="_blank"><i
+              class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col about">
+        <h2>About Us</h2>
+        <p>We provide a smart system to track and manage certificates for aviation simulation devices. Our goal is to
           ensure efficient, accurate, and reliable handling of certificate issuance, renewal, and expiration.</p>
-    </div>
+      </div>
 
-  <div class="copyright">
-    Copyright © Prince Sultan Aviation Academy
-  </div>
-</footer>
-
+      <div class="copyright">
+        Copyright © Prince Sultan Aviation Academy
+      </div>
+  </footer>
