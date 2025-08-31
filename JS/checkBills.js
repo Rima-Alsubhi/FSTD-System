@@ -98,7 +98,6 @@ async function loadBills() {
                     </div>
             <div class="authority-badge ${(bill["Authority"] || "").toLowerCase()}">${bill["Authority"] || "—"}</div>
                         </div>`;
-            // modifying this (date is not being retrieved)
             const billingDateField = bill.date || bill.Date;
             let billingDate = "—";
 
