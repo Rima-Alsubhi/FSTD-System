@@ -266,35 +266,18 @@ function displayActiveRequests(requests) {
 }
 
 function createChart(simulators) {
-  const currentDate = new Date();
   let active = 0, expiring = 0, expired = 0, pending = 0;
 
   simulators.forEach(sim => {
     const results = analyzeSimulatorStatus(sim);
-
-    let hasExpired = false;
-    let hasExpiring = false;
-    let hasActive = false;
-    let hasPending = false;
-
     results.forEach(result => {
       switch (result.status) {
-        case 'expired': hasExpired = true; break;
-        case 'expiring': hasExpiring = true; break;
-        case 'active': hasActive = true; break;
-        default: hasPending = true;
+        case 'expired': expired++; break;
+        case 'expiring': expiring++; break;
+        case 'active': active++; break;
+        case 'pending': pending++; break;
       }
     });
-
-    if (hasExpired) {
-      expired++;
-    } else if (hasExpiring) {
-      expiring++;
-    } else if (hasActive) {
-      active++;
-    } else {
-      pending++;
-    }
   });
 
   const ctx = document.getElementById('statusChart');
