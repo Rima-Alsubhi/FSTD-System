@@ -69,4 +69,3 @@ The Flight Simulator Tracking System (FSTS) is a robust enterprise application b
 
 ---
 
-**Note**: This system is specifically designed for aviation industry use and requires proper regulatory compliance understanding for effective implementation.
